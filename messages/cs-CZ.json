@@ -605,7 +605,7 @@
     "perDay": "Průměr na den",
     "perDayHint": "za posledních 30 dní",
     "sinceStart": "od začátku",
-    "thisMonthHint": "{count} výdajů",
+    "thisMonthHint": "{count, plural, one {# výdaj} few {# výdaje} other {# výdajů}}",
     "countHint": "za celou dobu",
     "months": "Útraty po měsících",
     "lastSixMonths": "Posledních 6 měsíců",

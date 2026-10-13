@@ -3,10 +3,14 @@
 import { ShareButton } from '@/app/groups/[groupId]/share-button'
 import { Skeleton } from '@/components/ui/skeleton'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { useCurrentGroup } from './current-group-context'
 
 export const GroupHeader = () => {
   const { isLoading, groupId, group } = useCurrentGroup()
+  const pathname = usePathname()
+  // The dashboard has its own hero; the app header already shows the name.
+  if (pathname === `/groups/${groupId}`) return null
 
   return (
     <div className="flex items-center justify-between gap-3">

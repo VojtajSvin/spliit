@@ -47,6 +47,7 @@ export function GroupTabs({ groupId }: Props) {
         </Link>
       )}
       <nav
+        hidden={isForm}
         aria-label="Menu"
         className="fixed z-40 bottom-0 inset-x-0 px-3 pb-safe pointer-events-none"
       >
