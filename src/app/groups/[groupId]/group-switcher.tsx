@@ -3,16 +3,19 @@
 import {
   getArchivedGroups,
   getRecentGroups,
-  RecentGroup,
 } from '@/app/groups/recent-groups-helpers'
+import { usePinnedGroups } from '@/components/pinned-groups'
 import { cn } from '@/lib/utils'
+import { trpc } from '@/trpc/client'
 import { Plus } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
-import { InviteButton } from './invite-button'
 
-/** Chips for switching between the groups opened on this device. */
+/**
+ * Chips for switching groups: the pinned groups (DEFAULT_GROUP_IDS) first in
+ * their configured order, then other groups known on this device, oldest first.
+ */
 export function GroupSwitcher({
   groupId,
   groupName,
@@ -21,17 +24,32 @@ export function GroupSwitcher({
   groupName: string
 }) {
   const t = useTranslations('Dashboard')
-  const [groups, setGroups] = useState<RecentGroup[]>([])
+  const pinned = usePinnedGroups()
+  const [localIds, setLocalIds] = useState<string[]>([])
 
   useEffect(() => {
     const archived = new Set(getArchivedGroups())
-    const recent = getRecentGroups().filter(
-      (g) => !archived.has(g.id) || g.id === groupId,
+    setLocalIds(
+      getRecentGroups()
+        .map((g) => g.id)
+        .filter((id) => !archived.has(id) || id === groupId),
     )
-    if (!recent.some((g) => g.id === groupId))
-      recent.unshift({ id: groupId, name: groupName })
-    setGroups(recent)
-  }, [groupId, groupName])
+  }, [groupId])
+
+  const ids = [...new Set([...pinned, ...localIds, groupId])].slice(0, 100)
+  const { data } = trpc.groups.list.useQuery({ groupIds: ids })
+  const found = new Map((data?.groups ?? []).map((g) => [g.id, g]))
+  const others = ids
+    .filter((id) => !pinned.includes(id) && found.has(id))
+    .sort((a, b) =>
+      found.get(a)!.createdAt.localeCompare(found.get(b)!.createdAt),
+    )
+  const groups = data
+    ? [...pinned.filter((id) => found.has(id)), ...others].map((id) => ({
+        id,
+        name: found.get(id)!.name,
+      }))
+    : [{ id: groupId, name: groupName }]
 
   return (
     <nav
@@ -59,7 +77,6 @@ export function GroupSwitcher({
         <Plus className="w-4 h-4" />
         {t('newGroup')}
       </Link>
-      <InviteButton groupId={groupId} groupName={groupName} />
     </nav>
   )
 }

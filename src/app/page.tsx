@@ -8,7 +8,9 @@ export const dynamic = 'force-dynamic'
  * otherwise the most recently created group, otherwise the group list.
  */
 export default async function HomePage() {
-  let groupId = process.env.DEFAULT_GROUP_ID
+  let groupId =
+    process.env.DEFAULT_GROUP_IDS?.split(',')[0]?.trim() ||
+    process.env.DEFAULT_GROUP_ID
   if (!groupId) {
     const latest = await prisma.group.findFirst({
       orderBy: { createdAt: 'desc' },

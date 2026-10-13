@@ -1,4 +1,6 @@
 import { ApplePwaSplash } from '@/app/apple-pwa-splash'
+import { AppHeaderTitle } from '@/components/app-header-title'
+import { PinnedGroupsProvider } from '@/components/pinned-groups'
 import { ProgressBar } from '@/components/progress-bar'
 import { ServiceWorkerRegistration } from '@/components/service-worker-registration'
 import { ThemeProvider } from '@/components/theme-provider'
@@ -60,27 +62,34 @@ export const viewport: Viewport = {
 function Content({ children }: { children: React.ReactNode }) {
   return (
     <TRPCProvider>
-      <header className="sticky top-0 z-40 bg-background/80 backdrop-blur-md">
-        <div className="max-w-screen-md mx-auto flex items-center justify-between px-4 h-14">
-          <Link href="/" className="flex items-center gap-2 font-black text-lg">
-            <span className="clay-sm bg-peach w-9 h-9 flex items-center justify-center text-xl">
-              🏡
-            </span>
-            {APP_NAME}
-          </Link>
-          <Link
-            href="/groups"
-            className="clay-sm bg-card w-9 h-9 flex items-center justify-center"
-            aria-label="Skupiny"
-            title="Skupiny"
-          >
-            <Users className="w-4 h-4" />
-          </Link>
-        </div>
-      </header>
+      <PinnedGroupsProvider
+        ids={(
+          process.env.DEFAULT_GROUP_IDS ||
+          process.env.DEFAULT_GROUP_ID ||
+          ''
+        )
+          .split(',')
+          .map((s) => s.trim())
+          .filter(Boolean)}
+      >
+        <header className="sticky top-0 z-40 bg-background/80 backdrop-blur-md">
+          <div className="max-w-screen-md mx-auto flex items-center gap-2 px-4 h-14">
+            <AppHeaderTitle appName={APP_NAME} />
+            <div className="ml-auto" />
+            <Link
+              href="/groups"
+              className="clay-sm bg-card w-9 h-9 flex items-center justify-center"
+              aria-label="Skupiny"
+              title="Skupiny"
+            >
+              <Users className="w-4 h-4" />
+            </Link>
+          </div>
+        </header>
 
-      <div className="flex-1 flex flex-col">{children}</div>
-      <Toaster />
+        <div className="flex-1 flex flex-col">{children}</div>
+        <Toaster />
+      </PinnedGroupsProvider>
     </TRPCProvider>
   )
 }
