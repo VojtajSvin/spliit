@@ -10,7 +10,11 @@ export const GroupHeader = () => {
   const { isLoading, groupId, group } = useCurrentGroup()
   const pathname = usePathname()
   // The dashboard has its own hero; the app header already shows the name.
-  if (pathname === `/groups/${groupId}`) return null
+  if (
+    pathname === `/groups/${groupId}` ||
+    pathname === `/groups/${groupId}/expenses/create`
+  )
+    return null
 
   return (
     <div className="flex items-center justify-between gap-3">

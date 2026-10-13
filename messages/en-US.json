@@ -629,5 +629,25 @@
   "App": {
     "name": "Společné výdaje",
     "description": "Společné výdaje pro dva."
+  },
+  "QuickAdd": {
+    "title": "Nový výdaj",
+    "cancel": "Zrušit",
+    "amount": "Částka",
+    "titleLabel": "Název",
+    "titlePlaceholder": "Za co? (např. Albert)",
+    "today": "dnes",
+    "splitEvenly": "napůl",
+    "onlyFor": "jen {name}",
+    "defaultTitle": "Výdaj",
+    "submit": "Přidat",
+    "more": "Další detaily",
+    "paidBy": "Platil(a)",
+    "paidFor": "Rozdělit mezi",
+    "date": "Datum",
+    "category": "Kategorie",
+    "notes": "Poznámka",
+    "fullForm": "Otevřít plný formulář",
+    "error": "Výdaj se nepodařilo uložit. Zkus to znovu."
   }
 }

@@ -131,6 +131,56 @@ export function GroupDashboard() {
         )}
       </section>
 
+      {/* Recent */}
+      <section className="clay bg-card p-4">
+        <div className="flex justify-between items-center mb-2">
+          <h2 className="font-extrabold">{t('recent')}</h2>
+          <Link
+            href={`/groups/${groupId}/expenses`}
+            className="clay-sm bg-background text-[11px] font-bold px-3 py-1"
+          >
+            {t('seeAll')}
+          </Link>
+        </div>
+        {data.recent.length === 0 ? (
+          <p className="text-sm text-muted-foreground py-4">{t('empty')}</p>
+        ) : (
+          <ul className="divide-y divide-border">
+            {data.recent.map((e) => (
+              <li key={e.id}>
+                <Link
+                  href={`/groups/${groupId}/expenses/${e.id}/edit`}
+                  className="flex items-center gap-3 py-3"
+                >
+                  <span className="clay-sm bg-butter w-11 h-11 flex items-center justify-center text-xl shrink-0">
+                    {e.isReimbursement
+                      ? '🤝'
+                      : (GROUPING_EMOJI[e.categoryGrouping ?? ''] ?? '🧺')}
+                  </span>
+                  <span className="flex-1 min-w-0">
+                    <span className="block font-bold truncate">{e.title}</span>
+                    <span className="block text-xs text-foreground/60">
+                      {t('paidBy', { name: e.paidByName })} ·{' '}
+                      {new Intl.DateTimeFormat(locale, {
+                        day: 'numeric',
+                        month: 'numeric',
+                        timeZone: 'UTC',
+                      }).format(new Date(`${e.expenseDate}T00:00:00Z`))}
+                    </span>
+                  </span>
+                  <span className="font-extrabold whitespace-nowrap">
+                    {money(e.amount)}
+                  </span>
+                  <span className="clay-sm bg-background w-8 h-8 flex items-center justify-center shrink-0">
+                    <ChevronRight className="w-4 h-4" />
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
+
       {/* Stat tiles */}
       <section className="grid grid-cols-2 gap-3">
         {tiles.map((tile, i) => (
@@ -230,56 +280,6 @@ export function GroupDashboard() {
             ))}
           </ul>
         </div>
-      </section>
-
-      {/* Recent */}
-      <section className="clay bg-card p-4">
-        <div className="flex justify-between items-center mb-2">
-          <h2 className="font-extrabold">{t('recent')}</h2>
-          <Link
-            href={`/groups/${groupId}/expenses`}
-            className="clay-sm bg-background text-[11px] font-bold px-3 py-1"
-          >
-            {t('seeAll')}
-          </Link>
-        </div>
-        {data.recent.length === 0 ? (
-          <p className="text-sm text-muted-foreground py-4">{t('empty')}</p>
-        ) : (
-          <ul className="divide-y divide-border">
-            {data.recent.map((e) => (
-              <li key={e.id}>
-                <Link
-                  href={`/groups/${groupId}/expenses/${e.id}/edit`}
-                  className="flex items-center gap-3 py-3"
-                >
-                  <span className="clay-sm bg-butter w-11 h-11 flex items-center justify-center text-xl shrink-0">
-                    {e.isReimbursement
-                      ? '🤝'
-                      : (GROUPING_EMOJI[e.categoryGrouping ?? ''] ?? '🧺')}
-                  </span>
-                  <span className="flex-1 min-w-0">
-                    <span className="block font-bold truncate">{e.title}</span>
-                    <span className="block text-xs text-foreground/60">
-                      {t('paidBy', { name: e.paidByName })} ·{' '}
-                      {new Intl.DateTimeFormat(locale, {
-                        day: 'numeric',
-                        month: 'numeric',
-                        timeZone: 'UTC',
-                      }).format(new Date(`${e.expenseDate}T00:00:00Z`))}
-                    </span>
-                  </span>
-                  <span className="font-extrabold whitespace-nowrap">
-                    {money(e.amount)}
-                  </span>
-                  <span className="clay-sm bg-background w-8 h-8 flex items-center justify-center shrink-0">
-                    <ChevronRight className="w-4 h-4" />
-                  </span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        )}
       </section>
 
       {/* Banner CTA */}

@@ -79,7 +79,7 @@ export function getDashboard(
         b.expenseDate.getTime() - a.expenseDate.getTime() ||
         b.id.localeCompare(a.id),
     )
-    .slice(0, 5)
+    .slice(0, 6)
     .map((e) => ({
       id: e.id,
       title: e.title,
