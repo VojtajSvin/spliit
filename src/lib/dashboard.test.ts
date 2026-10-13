@@ -49,4 +49,23 @@ describe('getDashboard', () => {
     expect(d.recent[0].id).toBe('3')
     expect(d.reimbursements).toHaveLength(1)
   })
+
+  it('computes a monthly budget and a ranged budget', () => {
+    const list = [exp('1', '2026-10-01', 1000), exp('2', '2026-09-15', 3000)]
+    expect(getDashboard(list, [a, b], now).budget).toBeNull()
+    expect(
+      getDashboard(list, [a, b], now, {
+        budget: 5000,
+        budgetFrom: null,
+        budgetTo: null,
+      }).budget,
+    ).toMatchObject({ amount: 5000, spent: 1000, monthly: true })
+    expect(
+      getDashboard(list, [a, b], now, {
+        budget: 2000,
+        budgetFrom: new Date('2026-09-01T00:00:00Z'),
+        budgetTo: new Date('2026-09-30T00:00:00Z'),
+      }).budget,
+    ).toMatchObject({ spent: 3000, monthly: false, from: '2026-09-01' })
+  })
 })

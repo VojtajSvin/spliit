@@ -9,5 +9,9 @@ export const getGroupDashboardProcedure = baseProcedure
     const group = await getGroup(groupId)
     if (!group) return null
     const expenses = await getGroupExpenses(groupId)
-    return getDashboard(expenses as any, group.participants)
+    return getDashboard(expenses as any, group.participants, new Date(), {
+      budget: group.budget,
+      budgetFrom: group.budgetFrom,
+      budgetTo: group.budgetTo,
+    })
   })

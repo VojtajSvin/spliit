@@ -20,8 +20,31 @@ export const groupFormSchema = z
       )
       .min(1)
       .max(100),
+    // Optional budget, in major units as typed ('' = none), and date range.
+    budget: z
+      .string()
+      .max(20)
+      .refine(
+        (v) =>
+          v.trim() === '' || Number(v.replace(',', '.').replace(/\s/g, '')) > 0,
+        'invalidNumber',
+      )
+      .optional(),
+    budgetFrom: z
+      .union([z.literal(''), z.string().regex(/^\d{4}-\d{2}-\d{2}$/)])
+      .optional(),
+    budgetTo: z
+      .union([z.literal(''), z.string().regex(/^\d{4}-\d{2}-\d{2}$/)])
+      .optional(),
   })
-  .superRefine(({ participants }, ctx) => {
+  .superRefine(({ participants, budgetFrom, budgetTo }, ctx) => {
+    if (budgetFrom && budgetTo && budgetFrom > budgetTo) {
+      ctx.addIssue({
+        code: 'custom',
+        message: 'budgetRange',
+        path: ['budgetTo'],
+      })
+    }
     participants.forEach((participant, i) => {
       participants.slice(0, i).forEach((otherParticipant) => {
         if (otherParticipant.name === participant.name) {

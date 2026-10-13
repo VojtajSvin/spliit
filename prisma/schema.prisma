@@ -24,6 +24,10 @@ model Group {
   activities   Activity[]
   createdAt    DateTime      @default(now())
   deleteAt     DateTime?
+  /// Optional budget in minor units, with an optional date range.
+  budget       Int?
+  budgetFrom   DateTime?     @db.Date
+  budgetTo     DateTime?     @db.Date
 }
 
 model Participant {

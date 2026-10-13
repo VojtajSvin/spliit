@@ -12,6 +12,6 @@ export async function generateMetadata() {
 
 export default function CreateGroupPage() {
   const defaultCurrencyCode =
-    env.DEFAULT_CURRENCY_CODE ?? env.NEXT_PUBLIC_DEFAULT_CURRENCY_CODE ?? 'USD'
+    env.DEFAULT_CURRENCY_CODE ?? env.NEXT_PUBLIC_DEFAULT_CURRENCY_CODE ?? 'CZK'
   return <CreateGroup defaultCurrencyCode={defaultCurrencyCode} />
 }

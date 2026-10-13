@@ -10,6 +10,7 @@ import { useLocale, useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useEffect } from 'react'
 import { useCurrentGroup } from './current-group-context'
+import { GroupSwitcher } from './group-switcher'
 
 const TILE_COLORS = [
   { bg: 'bg-sage', badge: 'bg-sage-strong', emoji: '🛒' },
@@ -66,6 +67,14 @@ export function GroupDashboard() {
   const name = (id: string) =>
     group.participants.find((p) => p.id === id)?.name ?? ''
   const debt = data.reimbursements[0]
+  const fmtDay = (d: string | null) =>
+    d
+      ? new Intl.DateTimeFormat(locale, {
+          day: 'numeric',
+          month: 'numeric',
+          timeZone: 'UTC',
+        }).format(new Date(`${d}T00:00:00Z`))
+      : '…'
   const maxMonth = Math.max(1, ...data.months.map((m) => m.amount))
   const payerTotal = data.byPayer.reduce((s, p) => s + p.amount, 0) || 1
   const monthLabel = (m: string) =>
@@ -97,6 +106,7 @@ export function GroupDashboard() {
   return (
     <div className="flex flex-col gap-4" data-testid="group-dashboard">
       <TrackPage path={`/groups/${groupId}`} />
+      <GroupSwitcher groupId={groupId} groupName={group.name} />
 
       {/* Hero */}
       <section className="clay bg-peach relative overflow-hidden p-5 pr-24">
@@ -130,6 +140,50 @@ export function GroupDashboard() {
           </>
         )}
       </section>
+
+      {data.budget && (
+        <section className="clay bg-butter p-4" data-testid="budget-card">
+          <div className="flex justify-between items-baseline">
+            <h2 className="font-extrabold">💰 {t('budgetTitle')}</h2>
+            <span className="text-[11px] font-bold text-foreground/60">
+              {data.budget.monthly
+                ? t('budgetMonth')
+                : t('budgetRange', {
+                    from: fmtDay(data.budget.from),
+                    to: fmtDay(data.budget.to),
+                  })}
+            </span>
+          </div>
+          <p className="mt-1 text-sm font-semibold">
+            {t('budgetSpent', {
+              spent: money(data.budget.spent),
+              amount: money(data.budget.amount),
+            })}
+          </p>
+          <div className="mt-2 h-4 rounded-full clay-pressed bg-background overflow-hidden">
+            <div
+              className={cn(
+                'h-full rounded-full',
+                data.budget.spent > data.budget.amount
+                  ? 'bg-destructive'
+                  : 'bg-sage-strong',
+              )}
+              style={{
+                width: `${Math.min(100, (data.budget.spent / data.budget.amount) * 100)}%`,
+              }}
+            />
+          </div>
+          <p className="mt-2 text-lg font-black">
+            {data.budget.spent > data.budget.amount
+              ? t('budgetOver', {
+                  over: money(data.budget.spent - data.budget.amount),
+                })
+              : t('budgetLeft', {
+                  left: money(data.budget.amount - data.budget.spent),
+                })}
+          </p>
+        </section>
+      )}
 
       {/* Recent */}
       <section className="clay bg-card p-4">

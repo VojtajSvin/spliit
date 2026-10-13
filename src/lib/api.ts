@@ -4,12 +4,28 @@ import {
   RecurrenceRule,
   RecurringExpenseLink,
 } from '@/generated/prisma/client'
+import { getCurrency } from '@/lib/currency'
 import { prisma } from '@/lib/prisma'
 import { randomId } from '@/lib/random'
 import { ExpenseFormValues, GroupFormValues } from '@/lib/schemas'
 
 // Re-exported for backwards compatibility with existing server-side importers.
 export { randomId }
+
+/** Converts the budget fields of the group form to database values. */
+export function budgetFromForm(values: GroupFormValues) {
+  const raw = (values.budget ?? '').replace(',', '.').replace(/\s/g, '')
+  const digits = values.currencyCode
+    ? (getCurrency(values.currencyCode, 'cs-CZ', 'Custom').decimal_digits ?? 2)
+    : 2
+  return {
+    budget: raw === '' ? null : Math.round(Number(raw) * 10 ** digits),
+    budgetFrom: values.budgetFrom
+      ? new Date(`${values.budgetFrom}T00:00:00Z`)
+      : null,
+    budgetTo: values.budgetTo ? new Date(`${values.budgetTo}T00:00:00Z`) : null,
+  }
+}
 
 export async function createGroup(groupFormValues: GroupFormValues) {
   return prisma.group.create({
@@ -19,6 +35,7 @@ export async function createGroup(groupFormValues: GroupFormValues) {
       information: groupFormValues.information,
       currency: groupFormValues.currency,
       currencyCode: groupFormValues.currencyCode,
+      ...budgetFromForm(groupFormValues),
       participants: {
         createMany: {
           data: groupFormValues.participants.map(({ name }) => ({
@@ -357,6 +374,7 @@ export async function updateGroup(
       information: groupFormValues.information,
       currency: groupFormValues.currency,
       currencyCode: groupFormValues.currencyCode,
+      ...budgetFromForm(groupFormValues),
       participants: {
         deleteMany: existingGroup.participants.filter(
           (p) => !groupFormValues.participants.some((p2) => p2.id === p.id),

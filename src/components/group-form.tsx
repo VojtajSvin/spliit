@@ -58,6 +58,8 @@ export type Props = {
   protectedParticipantIds?: string[]
   /** Resolved on the server, since the runtime variable is not public. */
   defaultCurrencyCode?: string
+  /** Participants to start a new group with. */
+  defaultParticipants?: { name: string }[]
   /** Whether to offer deleting the group (ENABLE_GROUP_DELETION). */
   enableGroupDeletion?: boolean
 }
@@ -67,6 +69,7 @@ export function GroupForm({
   onSubmit,
   protectedParticipantIds = [],
   defaultCurrencyCode = 'USD',
+  defaultParticipants,
   enableGroupDeletion = false,
 }: Props) {
   const locale = useLocale()
@@ -80,17 +83,29 @@ export function GroupForm({
           currency: group.currency ?? '',
           currencyCode: group.currencyCode ?? '',
           participants: group.participants,
+          budget:
+            group.budget != null
+              ? String(group.budget / 100).replace('.', ',')
+              : '',
+          budgetFrom: group.budgetFrom
+            ? new Date(group.budgetFrom).toISOString().slice(0, 10)
+            : '',
+          budgetTo: group.budgetTo
+            ? new Date(group.budgetTo).toISOString().slice(0, 10)
+            : '',
         }
       : {
           name: '',
           information: '',
           currency: '',
           currencyCode: defaultCurrencyCode, // TODO: derive from the locale when not configured
-          participants: [
+          participants: defaultParticipants ?? [
             { name: t('Participants.John') },
             { name: t('Participants.Jane') },
-            { name: t('Participants.Jack') },
           ],
+          budget: '',
+          budgetFrom: '',
+          budgetTo: '',
         },
   })
   const { fields, append, remove } = useFieldArray({
@@ -252,6 +267,57 @@ export function GroupForm({
                 )}
               />
             </div>
+          </CardContent>
+        </Card>
+
+        <Card className="mb-4">
+          <CardHeader>
+            <CardTitle>{t('Budget.title')}</CardTitle>
+            <CardDescription>{t('Budget.description')}</CardDescription>
+          </CardHeader>
+          <CardContent className="grid grid-cols-2 gap-4">
+            <div className="col-span-2">
+              <FormField
+                control={form.control}
+                name="budget"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t('Budget.amount')}</FormLabel>
+                    <FormControl>
+                      <Input
+                        inputMode="decimal"
+                        placeholder={t('Budget.amountPlaceholder')}
+                        className="text-base"
+                        {...field}
+                        value={field.value ?? ''}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            {(['budgetFrom', 'budgetTo'] as const).map((name) => (
+              <FormField
+                key={name}
+                control={form.control}
+                name={name}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t(`Budget.${name}`)}</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="date"
+                        className="text-base"
+                        {...field}
+                        value={field.value ?? ''}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            ))}
           </CardContent>
         </Card>
 

@@ -153,6 +153,14 @@
     "Delete": {
       "title": "Smazat skupinu",
       "description": "Smazaná skupina bude 30 dní deaktivovaná a poté budou všechna data nenávratně smazána."
+    },
+    "Budget": {
+      "title": "Rozpočet",
+      "description": "Nepovinné. Bez data se rozpočet počítá na aktuální měsíc, s datem (např. na dovolenou) za zvolené období.",
+      "amount": "Částka rozpočtu",
+      "amountPlaceholder": "např. 30 000",
+      "budgetFrom": "Od (nepovinné)",
+      "budgetTo": "Do (nepovinné)"
     }
   },
   "ExpenseForm": {
@@ -477,7 +485,8 @@
     "ratePositive": "Tato hodnota musí být jednoznačně větší než nula.",
     "max200": "Zadejte nejvýše 200 znaků.",
     "max5000": "Zadejte nejvýše 5 000 znaků.",
-    "max10000": "Zadejte nejvýše 10 000 znaků."
+    "max10000": "Zadejte nejvýše 10 000 znaků.",
+    "budgetRange": "Datum „Do“ musí být po datu „Od“."
   },
   "Categories": {
     "search": "Hledat kategorii...",
@@ -624,7 +633,15 @@
       "balances": "Zůstatky",
       "stats": "Statistiky",
       "more": "Více"
-    }
+    },
+    "budgetTitle": "Rozpočet",
+    "budgetSpent": "Utraceno {spent} z {amount}",
+    "budgetLeft": "Zbývá {left}",
+    "budgetOver": "Přečerpáno o {over}",
+    "budgetMonth": "tento měsíc",
+    "budgetRange": "{from} – {to}",
+    "newGroup": "Nová skupina",
+    "groups": "Skupiny"
   },
   "App": {
     "name": "Společné výdaje",

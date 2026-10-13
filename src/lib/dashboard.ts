@@ -28,10 +28,17 @@ export function pragueToday(now = new Date()) {
  * Derives everything the group dashboard shows from the group's expenses.
  * Reimbursements count toward balances but not toward spending.
  */
+export type BudgetSettings = {
+  budget: number | null
+  budgetFrom: Date | null
+  budgetTo: Date | null
+}
+
 export function getDashboard(
   expenses: DashboardExpense[],
   participants: { id: string; name: string }[],
   now = new Date(),
+  budgetSettings?: BudgetSettings,
 ) {
   const today = pragueToday(now)
   const month = today.slice(0, 7)
@@ -91,7 +98,32 @@ export function getDashboard(
       categoryName: e.category?.name ?? null,
     }))
 
+  // Budget: within the set range; without any date, the current month.
+  let budget = null as null | {
+    amount: number
+    spent: number
+    from: string | null
+    to: string | null
+    monthly: boolean
+  }
+  if (budgetSettings?.budget) {
+    const monthly = !budgetSettings.budgetFrom && !budgetSettings.budgetTo
+    const from = budgetSettings.budgetFrom
+      ? dayKey(budgetSettings.budgetFrom)
+      : null
+    const to = budgetSettings.budgetTo ? dayKey(budgetSettings.budgetTo) : null
+    const spent = spending
+      .filter((e) => {
+        const d = dayKey(e.expenseDate)
+        if (monthly) return d.slice(0, 7) === month
+        return (!from || d >= from) && (!to || d <= to)
+      })
+      .reduce((s, e) => s + e.amount, 0)
+    budget = { amount: budgetSettings.budget, spent, from, to, monthly }
+  }
+
   return {
+    budget,
     total,
     count: spending.length,
     thisMonth,

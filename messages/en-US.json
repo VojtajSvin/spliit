@@ -160,6 +160,14 @@
     "Delete": {
       "title": "Delete group",
       "description": "Deleting a group will result in a 30 days deactivation period, after which all data will be permanently deleted and unrecoverable."
+    },
+    "Budget": {
+      "title": "Rozpočet",
+      "description": "Nepovinné. Bez data se rozpočet počítá na aktuální měsíc, s datem (např. na dovolenou) za zvolené období.",
+      "amount": "Částka rozpočtu",
+      "amountPlaceholder": "např. 30 000",
+      "budgetFrom": "Od (nepovinné)",
+      "budgetTo": "Do (nepovinné)"
     }
   },
   "DeleteGroupButton": {
@@ -503,7 +511,8 @@
     "paidForMin1": "The expense must be paid for at least one participant.",
     "noZeroShares": "All shares must be higher than 0.",
     "amountSum": "The amounts add up to {sum}, {difference} {direction, select, over {more} other {less}} than the expense amount ({amount}).",
-    "percentageSum": "The percentages add up to {sum}%, {difference}% {direction, select, over {more} other {less}} than 100%."
+    "percentageSum": "The percentages add up to {sum}%, {difference}% {direction, select, over {more} other {less}} than 100%.",
+    "budgetRange": "Datum „Do“ musí být po datu „Od“."
   },
   "Categories": {
     "search": "Search category...",
@@ -624,7 +633,15 @@
       "balances": "Zůstatky",
       "stats": "Statistiky",
       "more": "Více"
-    }
+    },
+    "budgetTitle": "Rozpočet",
+    "budgetSpent": "Utraceno {spent} z {amount}",
+    "budgetLeft": "Zbývá {left}",
+    "budgetOver": "Přečerpáno o {over}",
+    "budgetMonth": "tento měsíc",
+    "budgetRange": "{from} – {to}",
+    "newGroup": "Nová skupina",
+    "groups": "Skupiny"
   },
   "App": {
     "name": "Společné výdaje",
