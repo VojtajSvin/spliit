@@ -6,7 +6,7 @@
       "groups": "Přejít na skupiny",
       "github": "GitHub"
     },
-    "metaTitle": "Spliit · Sdílejte výdaje s přáteli a rodinou"
+    "metaTitle": "Společné výdaje"
   },
   "Header": {
     "groups": "Skupiny"
@@ -96,8 +96,12 @@
       "description": "Váš celkový zůstatek ve všech vašich skupinách.",
       "owedToYou": "Dluží se ti",
       "youOwe": "Dlužíš",
-      "settledUp": "Ve všech skupinách máte vše vyrovnané."
-    }
+      "settledUp": "Ve všech skupinách máte vše vyrovnané.",
+      "loadError": "Celkový zůstatek se nepodařilo načíst. Zkuste to znovu.",
+      "retry": "Zkusit znovu"
+    },
+    "loadError": "Skupiny se nepodařilo načíst. Zkuste to znovu.",
+    "retry": "Zkusit znovu"
   },
   "GroupForm": {
     "title": "Informace o skupině",
@@ -145,6 +149,10 @@
       "createDescription": "Všechny částky a zůstatky budou uvedeny v této měně.",
       "editDescription": "Všechny částky a zůstatky budou uvedeny v této měně. Změna této měny NEPOVEDE k přepočtu již zadaných výdajů, s výjimkou případů, kdy má daná měna jiné „dílčí jednotky“ než aktuální měna (např. při změně z amerického dolaru na japonský jen)",
       "customOption": "Vlastní"
+    },
+    "Delete": {
+      "title": "Smazat skupinu",
+      "description": "Smazaná skupina bude 30 dní deaktivovaná a poté budou všechna data nenávratně smazána."
     }
   },
   "ExpenseForm": {
@@ -425,7 +433,9 @@
       "earlierThisYear": "Dříve tento rok",
       "lastYear": "Minulý rok",
       "older": "Starší"
-    }
+    },
+    "groupDeletionScheduled": "Smazání skupiny naplánoval(a) <strong>{participant}</strong>.",
+    "groupRestored": "Skupinu obnovil(a) <strong>{participant}</strong>."
   },
   "Information": {
     "title": "Informace",
@@ -464,7 +474,10 @@
     "noZeroShares": "Všechny podíly musí být větší než 0.",
     "amountSum": "Součet částek je {sum}, což je o {difference} {direction, select, over {více} other {méně}} než částka výdaje ({amount}).",
     "percentageSum": "Součet procent je {sum} %, což je o {difference} % {direction, select, over {více} other {méně}} než 100 %.",
-    "ratePositive": "Tato hodnota musí být jednoznačně větší než nula."
+    "ratePositive": "Tato hodnota musí být jednoznačně větší než nula.",
+    "max200": "Zadejte nejvýše 200 znaků.",
+    "max5000": "Zadejte nejvýše 5 000 znaků.",
+    "max10000": "Zadejte nejvýše 10 000 znaků."
   },
   "Categories": {
     "search": "Hledat kategorii...",
@@ -559,5 +572,62 @@
     "other": {
       "heading": "Ostatní měny"
     }
+  },
+  "DeleteGroupButton": {
+    "title": "Smazat skupinu",
+    "description": "Opravdu chcete tuto skupinu smazat? Pro potvrzení zadejte níže její název.",
+    "groupNameField": "Název skupiny",
+    "ErrorToast": {
+      "title": "Skupinu se nepodařilo smazat",
+      "description": "Mezitím mohla být přejmenována nebo smazána. Obnovte stránku a zkuste to znovu."
+    }
+  },
+  "DeleteGroupNotice": {
+    "title": "Skupina je naplánovaná ke smazání",
+    "description": "Tato skupina je naplánovaná ke smazání a {date} bude nenávratně smazána. Pokud ji chcete obnovit, klikněte na tlačítko níže.",
+    "restore": "Obnovit skupinu",
+    "pastDeadline": "Tato skupina bude brzy nenávratně smazána a už ji nelze obnovit.",
+    "ErrorToast": {
+      "title": "Skupinu se nepodařilo obnovit",
+      "description": "Možná už byla obnovena nebo uplynula lhůta pro smazání. Obnovte stránku a podívejte se na její aktuální stav."
+    }
+  },
+  "Dashboard": {
+    "title": "Přehled",
+    "hello": "Ahoj! 👋",
+    "owes": "{from} dluží {to}",
+    "settled": "Jste vyrovnaní 🎉",
+    "settledText": "Nikdo nikomu nic nedluží.",
+    "settle": "Vyrovnat",
+    "thisMonth": "Utraceno tento měsíc",
+    "total": "Celkem utraceno",
+    "count": "Počet výdajů",
+    "perDay": "Průměr na den",
+    "perDayHint": "za posledních 30 dní",
+    "sinceStart": "od začátku",
+    "thisMonthHint": "{count} výdajů",
+    "countHint": "za celou dobu",
+    "months": "Útraty po měsících",
+    "lastSixMonths": "Posledních 6 měsíců",
+    "whoPaid": "Kdo platil",
+    "recent": "Poslední výdaje",
+    "seeAll": "Vše",
+    "paidBy": "platil(a) {name}",
+    "empty": "Zatím tu nejsou žádné výdaje.",
+    "add": "Přidat výdaj",
+    "bannerTitle": "Zaplatili jste něco spolu? ✨",
+    "bannerText": "Zapiš to hned, ať nic nezapadne.",
+    "loadError": "Přehled se nepodařilo načíst.",
+    "nav": {
+      "home": "Přehled",
+      "expenses": "Výdaje",
+      "balances": "Zůstatky",
+      "stats": "Statistiky",
+      "more": "Více"
+    }
+  },
+  "App": {
+    "name": "Společné výdaje",
+    "description": "Společné výdaje pro dva."
   }
 }

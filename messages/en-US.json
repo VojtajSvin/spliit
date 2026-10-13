@@ -591,5 +591,43 @@
     "updateTitle": "Update available",
     "updateDescription": "A new version of Spliit is available.",
     "reload": "Reload"
+  },
+  "Dashboard": {
+    "title": "Přehled",
+    "hello": "Ahoj! 👋",
+    "owes": "{from} dluží {to}",
+    "settled": "Jste vyrovnaní 🎉",
+    "settledText": "Nikdo nikomu nic nedluží.",
+    "settle": "Vyrovnat",
+    "thisMonth": "Utraceno tento měsíc",
+    "total": "Celkem utraceno",
+    "count": "Počet výdajů",
+    "perDay": "Průměr na den",
+    "perDayHint": "za posledních 30 dní",
+    "sinceStart": "od začátku",
+    "thisMonthHint": "{count} výdajů",
+    "countHint": "za celou dobu",
+    "months": "Útraty po měsících",
+    "lastSixMonths": "Posledních 6 měsíců",
+    "whoPaid": "Kdo platil",
+    "recent": "Poslední výdaje",
+    "seeAll": "Vše",
+    "paidBy": "platil(a) {name}",
+    "empty": "Zatím tu nejsou žádné výdaje.",
+    "add": "Přidat výdaj",
+    "bannerTitle": "Zaplatili jste něco spolu? ✨",
+    "bannerText": "Zapiš to hned, ať nic nezapadne.",
+    "loadError": "Přehled se nepodařilo načíst.",
+    "nav": {
+      "home": "Přehled",
+      "expenses": "Výdaje",
+      "balances": "Zůstatky",
+      "stats": "Statistiky",
+      "more": "Více"
+    }
+  },
+  "App": {
+    "name": "Společné výdaje",
+    "description": "Společné výdaje pro dva."
   }
 }

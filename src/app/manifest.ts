@@ -2,15 +2,15 @@ import { MetadataRoute } from 'next'
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'Spliit',
-    short_name: 'Spliit',
-    description:
-      'A minimalist web application to share expenses with friends and family. No ads, no account, no problem.',
-    start_url: '/groups',
-    id: '/groups',
+    name: 'Společné výdaje',
+    short_name: 'Výdaje',
+    description: 'Společné výdaje pro dva.',
+    lang: 'cs',
+    start_url: '/',
+    id: '/',
     display: 'standalone',
-    background_color: '#fff',
-    theme_color: '#047857',
+    background_color: '#F7EFE3',
+    theme_color: '#F7EFE3',
     icons: [
       {
         src: '/logo/48x48.png',

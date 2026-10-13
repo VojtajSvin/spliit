@@ -3,31 +3,41 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 240 10% 3.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 240 10% 3.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 3.9%;
-    --primary: 163 94% 24%;
-    --primary-foreground: 0 100% 100%;
-    --secondary: 240 4.8% 95.9%;
-    --secondary-foreground: 240 5.9% 10%;
-    --muted: 240 4.8% 95.9%;
-    --muted-foreground: 240 3.8% 46.1%;
-    --accent: 240 4.8% 95.9%;
-    --accent-foreground: 240 5.9% 10%;
-    --destructive: 0 84.2% 60.2%;
+    /* Pastel "clay" theme */
+    --background: 36 56% 93%; /* #F7EFE3 */
+    --foreground: 24 22% 20%;
+    --card: 38 60% 97%;
+    --card-foreground: 24 22% 20%;
+    --popover: 38 60% 98%;
+    --popover-foreground: 24 22% 20%;
+    --primary: 10 72% 64%; /* coral */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 140 22% 84%; /* sage */
+    --secondary-foreground: 150 20% 22%;
+    --muted: 36 40% 89%;
+    --muted-foreground: 24 12% 42%;
+    --accent: 36 50% 88%;
+    --accent-foreground: 24 22% 20%;
+    --destructive: 0 70% 60%;
     --destructive-foreground: 0 0% 98%;
-    --border: 240 5.9% 90%;
-    --input: 240 5.9% 90%;
-    --ring: 142.1 76.2% 36.3%;
-    --radius: 0.5rem;
-    --chart-1: 173 58% 39%;
-    --chart-2: 12 76% 61%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
+    --border: 34 34% 84%;
+    --input: 34 34% 84%;
+    --ring: 10 72% 70%;
+    --radius: 1.25rem;
+    --sage: 140 24% 82%;
+    --sage-strong: 150 22% 52%;
+    --peach: 14 82% 85%;
+    --peach-strong: 10 72% 64%;
+    --butter: 44 90% 82%;
+    --butter-strong: 40 85% 58%;
+    --sky: 212 45% 86%;
+    --sky-strong: 212 40% 60%;
+    --lilac: 290 30% 86%;
+    --chart-1: 10 72% 70%;
+    --chart-2: 150 24% 60%;
+    --chart-3: 44 85% 66%;
+    --chart-4: 212 40% 68%;
+    --chart-5: 290 25% 72%;
   }
 
   .dark {
@@ -65,6 +75,7 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-family: var(--font-nunito), ui-rounded, system-ui, sans-serif;
   }
 }
 
@@ -74,4 +85,56 @@
 
 .landing-header strong {
   @apply font-bold text-transparent;
+}
+
+/* Claymorphism helpers */
+.clay {
+  border-radius: 1.75rem;
+  box-shadow:
+    0 10px 24px -10px rgb(120 85 55 / 0.28),
+    0 2px 4px rgb(120 85 55 / 0.06),
+    inset 0 2px 1px rgb(255 255 255 / 0.75),
+    inset 0 -3px 6px rgb(120 85 55 / 0.08);
+}
+.clay-sm {
+  border-radius: 1.1rem;
+  box-shadow:
+    0 6px 14px -6px rgb(120 85 55 / 0.3),
+    inset 0 2px 1px rgb(255 255 255 / 0.7),
+    inset 0 -2px 4px rgb(120 85 55 / 0.08);
+}
+.clay-pressed {
+  box-shadow:
+    inset 0 3px 6px rgb(120 85 55 / 0.15),
+    inset 0 -1px 1px rgb(255 255 255 / 0.6);
+}
+.bg-sage {
+  background-color: hsl(var(--sage));
+}
+.bg-peach {
+  background-color: hsl(var(--peach));
+}
+.bg-butter {
+  background-color: hsl(var(--butter));
+}
+.bg-sky {
+  background-color: hsl(var(--sky));
+}
+.bg-lilac {
+  background-color: hsl(var(--lilac));
+}
+.bg-sage-strong {
+  background-color: hsl(var(--sage-strong));
+}
+.bg-peach-strong {
+  background-color: hsl(var(--peach-strong));
+}
+.bg-butter-strong {
+  background-color: hsl(var(--butter-strong));
+}
+.bg-sky-strong {
+  background-color: hsl(var(--sky-strong));
+}
+.pb-safe {
+  padding-bottom: max(env(safe-area-inset-bottom), 0.75rem);
 }

@@ -1,10 +1,5 @@
-import { redirect } from 'next/navigation'
+import { GroupDashboard } from './dashboard'
 
-export default async function GroupPage({
-  params,
-}: {
-  params: Promise<{ groupId: string }>
-}) {
-  const { groupId } = await params
-  redirect(`/groups/${groupId}/expenses`)
+export default function GroupPage() {
+  return <GroupDashboard />
 }

@@ -200,9 +200,14 @@ export function ExpenseForm({
 
   const getSelectedPayer = (field?: { value: string }) => {
     if (isCreate && typeof window !== 'undefined') {
-      const activeUser = localStorage.getItem(`${group.id}-activeUser`)
-      if (activeUser && activeUser !== 'None' && field?.value === undefined) {
-        return activeUser
+      if (field?.value === undefined) {
+        // Prefer whoever paid last time, then the active user.
+        const lastPayer = localStorage.getItem(`${group.id}-lastPayer`)
+        if (lastPayer && group.participants.some((p) => p.id === lastPayer)) {
+          return lastPayer
+        }
+        const activeUser = localStorage.getItem(`${group.id}-activeUser`)
+        if (activeUser && activeUser !== 'None') return activeUser
       }
     }
     return field?.value
@@ -322,6 +327,9 @@ export function ExpenseForm({
     )
 
     await persistDefaultSplittingOptions(group.id, values)
+    if (!values.isReimbursement && typeof localStorage !== 'undefined') {
+      localStorage.setItem(`${group.id}-lastPayer`, values.paidBy)
+    }
 
     // Store monetary amounts in minor units (cents)
     values.amount = amountAsMinorUnits(values.amount, groupCurrency)

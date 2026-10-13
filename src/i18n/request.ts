@@ -1,6 +1,5 @@
 import deepmerge from 'deepmerge'
 import { getRequestConfig } from 'next-intl/server'
-import { getUserLocale } from '../lib/locale'
 
 export const localeLabels = {
   id: 'Bahasa Indonesia',
@@ -37,11 +36,12 @@ export type Locales = ReadonlyArray<Locale>
 export const defaultLocale: Locale = 'en-US'
 
 export default getRequestConfig(async () => {
-  const locale = await getUserLocale()
+  // This instance is Czech only: the locale is fixed and the switcher is gone.
+  const locale: Locale = 'cs-CZ'
   const localeMessages = (await import(`../../messages/${locale}.json`)).default
 
   let messages: any
-  if (locale === defaultLocale) {
+  if ((locale as Locale) === defaultLocale) {
     messages = localeMessages
   } else {
     messages = deepmerge(

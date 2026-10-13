@@ -7,6 +7,7 @@ import { useTranslations } from 'next-intl'
 import { PropsWithChildren, useEffect } from 'react'
 import { CurrentGroupProvider } from './current-group-context'
 import { GroupHeader } from './group-header'
+import { GroupTabs } from './group-tabs'
 import { SaveGroupLocally } from './save-recent-group'
 
 export function GroupLayoutClient({
@@ -36,6 +37,7 @@ export function GroupLayoutClient({
       <CurrentGroupProvider {...props}>
         <GroupHeader />
         {children}
+        <GroupTabs groupId={groupId} />
       </CurrentGroupProvider>
     )
   }
@@ -46,6 +48,7 @@ export function GroupLayoutClient({
       <DeleteGroupNotice />
       {children}
       <SaveGroupLocally />
+      <GroupTabs groupId={groupId} />
     </CurrentGroupProvider>
   )
 }
