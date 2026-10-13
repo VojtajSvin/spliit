@@ -641,7 +641,17 @@
     "budgetMonth": "tento měsíc",
     "budgetRange": "{from} – {to}",
     "newGroup": "Nová skupina",
-    "groups": "Skupiny"
+    "groups": "Skupiny",
+    "invite": "Invite",
+    "inviteText": "Join the group “{name}” on Spliit 👇",
+    "inviteCopied": "Link copied",
+    "inviteCopyPrompt": "Copy the link:",
+    "samePeople": "Same people",
+    "otherPeople": "Other people",
+    "me": "Me",
+    "friend": "Friend",
+    "addingGroups": "Adding groups…",
+    "addedGroups": "Groups added"
   },
   "App": {
     "name": "Společné výdaje",

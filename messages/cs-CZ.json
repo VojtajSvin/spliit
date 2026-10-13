@@ -26,11 +26,11 @@
     "exportCsv": "Exportovat do CSV",
     "searchPlaceholder": "Hledat výdaj…",
     "ActiveUserModal": {
-      "title": "Kdo jste?",
-      "description": "Řekněte nám, který účastník jste, abychom mohli přizpůsobit zobrazení informací.",
-      "nobody": "Nechci nikoho vybírat",
-      "save": "Uložit změny",
-      "footer": "Toto nastavení můžete později změnit v nastavení skupiny."
+      "title": "Kdo jsi?",
+      "description": "Vyber, který účastník jsi – podle toho ti ukážeme, kolik dlužíš nebo kolik ti dluží.",
+      "nobody": "Nechci vybírat",
+      "save": "Uložit",
+      "footer": "Změnit to můžeš později v nastavení skupiny."
     },
     "Groups": {
       "upcoming": "Nadcházející",
@@ -641,7 +641,17 @@
     "budgetMonth": "tento měsíc",
     "budgetRange": "{from} – {to}",
     "newGroup": "Nová skupina",
-    "groups": "Skupiny"
+    "groups": "Skupiny",
+    "invite": "Pozvat",
+    "inviteText": "Pojď do skupiny „{name}“ ve Spliitu, ať máme výdaje pohromadě 👇",
+    "inviteCopied": "Odkaz zkopírován",
+    "inviteCopyPrompt": "Zkopíruj odkaz:",
+    "samePeople": "Stejní lidé",
+    "otherPeople": "Jiní lidé",
+    "me": "Já",
+    "friend": "Kamarád",
+    "addingGroups": "Přidávám skupiny…",
+    "addedGroups": "Skupiny přidány"
   },
   "App": {
     "name": "Společné výdaje",

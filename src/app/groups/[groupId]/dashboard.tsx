@@ -10,6 +10,7 @@ import { useLocale, useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useEffect } from 'react'
 import { useCurrentGroup } from './current-group-context'
+import { ActiveUserModal } from './expenses/active-user-modal'
 import { GroupSwitcher } from './group-switcher'
 
 const TILE_COLORS = [
@@ -107,6 +108,7 @@ export function GroupDashboard() {
     <div className="flex flex-col gap-4" data-testid="group-dashboard">
       <TrackPage path={`/groups/${groupId}`} />
       <GroupSwitcher groupId={groupId} groupName={group.name} />
+      <ActiveUserModal groupId={groupId} />
 
       {/* Hero */}
       <section className="clay bg-peach relative overflow-hidden p-5 pr-24">

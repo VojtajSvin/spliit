@@ -10,6 +10,7 @@ import { Plus } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
+import { InviteButton } from './invite-button'
 
 /** Chips for switching between the groups opened on this device. */
 export function GroupSwitcher({
@@ -58,6 +59,7 @@ export function GroupSwitcher({
         <Plus className="w-4 h-4" />
         {t('newGroup')}
       </Link>
+      <InviteButton groupId={groupId} groupName={groupName} />
     </nav>
   )
 }
