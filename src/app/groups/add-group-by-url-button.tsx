@@ -38,6 +38,12 @@ export function AddGroupByUrlButton({ reload }: Props) {
     try {
       const parsed = new URL(urlToProcess, window.location.origin)
       if (parsed.origin === window.location.origin) {
+        // A pasted owner link (inside the home-screen app, which has its own
+        // cookies) marks this device as an owner device.
+        if (parsed.pathname === '/owner') {
+          window.location.href = parsed.pathname + parsed.search
+          return
+        }
         groupId = parsed.pathname.match(/^\/groups\/([^/]+)/)?.[1]
       }
     } catch {

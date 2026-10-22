@@ -2,7 +2,7 @@
 
 import { createContext, useContext } from 'react'
 
-/** Group ids from DEFAULT_GROUP_IDS, always shown first on every device. */
+/** Group ids from DEFAULT_GROUP_IDS, shown first on owner devices only. */
 const PinnedGroupsContext = createContext<string[]>([])
 
 export function PinnedGroupsProvider({
