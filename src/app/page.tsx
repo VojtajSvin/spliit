@@ -1,22 +1,13 @@
-import { prisma } from '@/lib/prisma'
+import { getOwnerGroupIds } from '@/lib/owner'
 import { redirect } from 'next/navigation'
 
 export const dynamic = 'force-dynamic'
 
 /**
- * The home page goes straight to the shared group: DEFAULT_GROUP_ID when set,
- * otherwise the most recently created group, otherwise the group list.
+ * Owner devices go straight to the main group; everyone else gets their own
+ * group list (only groups opened via an invite or created on that device).
  */
 export default async function HomePage() {
-  let groupId =
-    process.env.DEFAULT_GROUP_IDS?.split(',')[0]?.trim() ||
-    process.env.DEFAULT_GROUP_ID
-  if (!groupId) {
-    const latest = await prisma.group.findFirst({
-      orderBy: { createdAt: 'desc' },
-      select: { id: true },
-    })
-    groupId = latest?.id
-  }
-  redirect(groupId ? `/groups/${groupId}` : '/groups')
+  const [main] = await getOwnerGroupIds()
+  redirect(main ? `/groups/${main}` : '/groups')
 }

@@ -8,6 +8,7 @@ import { Toaster } from '@/components/ui/toaster'
 import { Analytics } from '@/lib/analytics/analytics'
 import { getAnalyticsConfig } from '@/lib/analytics/config'
 import { effectiveBaseUrl } from '@/lib/env'
+import { getOwnerGroupIds } from '@/lib/owner'
 import { TRPCProvider } from '@/trpc/client'
 import { Users } from 'lucide-react'
 import type { Metadata, Viewport } from 'next'
@@ -59,19 +60,11 @@ export const viewport: Viewport = {
   viewportFit: 'cover',
 }
 
-function Content({ children }: { children: React.ReactNode }) {
+async function Content({ children }: { children: React.ReactNode }) {
+  const ownerGroupIds = await getOwnerGroupIds()
   return (
     <TRPCProvider>
-      <PinnedGroupsProvider
-        ids={(
-          process.env.DEFAULT_GROUP_IDS ||
-          process.env.DEFAULT_GROUP_ID ||
-          ''
-        )
-          .split(',')
-          .map((s) => s.trim())
-          .filter(Boolean)}
-      >
+      <PinnedGroupsProvider ids={ownerGroupIds}>
         <header className="sticky top-0 z-40 bg-background/80 backdrop-blur-md">
           <div className="max-w-screen-md mx-auto flex items-center gap-2 px-4 h-14">
             <AppHeaderTitle appName={APP_NAME} />

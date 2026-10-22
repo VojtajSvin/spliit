@@ -13,7 +13,7 @@ import Link from 'next/link'
 import { useEffect, useState } from 'react'
 
 /**
- * Chips for switching groups: the pinned groups (DEFAULT_GROUP_IDS) first in
+ * Chips for switching groups: the pinned groups (DEFAULT_GROUP_IDS, owner devices only) first in
  * their configured order, then other groups known on this device, oldest first.
  */
 export function GroupSwitcher({
