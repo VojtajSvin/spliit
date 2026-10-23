@@ -1,3 +1,7 @@
+import {
+  ACTIVE_USER_CHANGED_EVENT,
+  activeUserStorageKey,
+} from '@/lib/active-user'
 import { useEffect, useState } from 'react'
 import useSWR, { Fetcher } from 'swr'
 
@@ -51,19 +55,53 @@ export function useBaseUrl() {
 }
 
 /**
- * @returns The active user, or `null` until it is fetched from local storage
+ * The raw `${groupId}-activeUser` value on this device.
+ * `ready` is false until localStorage has been read for this group, so callers
+ * must not substitute another participant during that gap.
  */
-export function useActiveUser(groupId?: string) {
-  const [activeUser, setActiveUser] = useState<string | null>(null)
+export function useActiveUserState(groupId?: string) {
+  const [state, setState] = useState<{
+    groupId?: string
+    ready: boolean
+    activeUser: string | null
+  }>({ ready: false, activeUser: null })
 
   useEffect(() => {
-    if (groupId) {
-      const activeUser = localStorage.getItem(`${groupId}-activeUser`)
-      if (activeUser) setActiveUser(activeUser)
+    if (!groupId) return
+
+    const read = () => {
+      setState({
+        groupId,
+        ready: true,
+        activeUser: localStorage.getItem(activeUserStorageKey(groupId)),
+      })
+    }
+    read()
+
+    const onChange = (event: Event) => {
+      const detail = (event as CustomEvent<{ groupId?: string }>).detail
+      if (!detail?.groupId || detail.groupId === groupId) read()
+    }
+    window.addEventListener(ACTIVE_USER_CHANGED_EVENT, onChange)
+    window.addEventListener('storage', read)
+    return () => {
+      window.removeEventListener(ACTIVE_USER_CHANGED_EVENT, onChange)
+      window.removeEventListener('storage', read)
     }
   }, [groupId])
 
-  return activeUser
+  const ready = state.ready && state.groupId === groupId
+  return {
+    ready,
+    activeUser: ready ? state.activeUser : null,
+  }
+}
+
+/**
+ * @returns The active user, or `null` until it is fetched from local storage
+ */
+export function useActiveUser(groupId?: string) {
+  return useActiveUserState(groupId).activeUser
 }
 
 interface FrankfurterAPIResponse {

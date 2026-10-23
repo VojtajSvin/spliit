@@ -10,6 +10,7 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
+import { isOptOut } from '@/lib/active-user'
 import { Currency } from '@/lib/currency'
 import { MAX_GROUPS_PER_QUERY } from '@/lib/group-query-limits'
 import { cn, formatCurrency, getCurrencyFromGroup } from '@/lib/utils'
@@ -31,7 +32,7 @@ export function GlobalBalanceCard({ groups }: { groups: RecentGroups }) {
     setActiveUserGroups(
       groups.flatMap((group) => {
         const participantId = localStorage.getItem(`${group.id}-activeUser`)
-        if (!participantId || participantId === 'None') return []
+        if (!participantId || isOptOut(participantId)) return []
         return [{ groupId: group.id, participantId }]
       }),
     )

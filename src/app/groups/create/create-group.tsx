@@ -2,6 +2,10 @@
 
 import { saveRecentGroup } from '@/app/groups/recent-groups-helpers'
 import { GroupForm } from '@/components/group-form'
+import {
+  NEW_GROUP_ACTIVE_USER_FOR_KEY,
+  NEW_GROUP_ACTIVE_USER_KEY,
+} from '@/lib/active-user'
 import { cn } from '@/lib/utils'
 import { trpc } from '@/trpc/client'
 import { useTranslations } from 'next-intl'
@@ -64,6 +68,10 @@ export const CreateGroup = ({
         defaultParticipants={participants}
         onSubmit={async (groupFormValues) => {
           const { groupId } = await mutateAsync({ groupFormValues })
+          // The name chosen in the form belongs to this new group only.
+          if (localStorage.getItem(NEW_GROUP_ACTIVE_USER_KEY)) {
+            localStorage.setItem(NEW_GROUP_ACTIVE_USER_FOR_KEY, groupId)
+          }
           // Saved here rather than only once the group page has loaded it, so
           // the group is not lost if the user leaves before that.
           saveRecentGroup({ id: groupId, name: groupFormValues.name })

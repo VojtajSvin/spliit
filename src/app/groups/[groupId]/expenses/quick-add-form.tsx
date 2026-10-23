@@ -5,6 +5,11 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useToast } from '@/components/ui/use-toast'
 import { Locale } from '@/i18n/request'
+import {
+  activeUserStorageKey,
+  chosenParticipantId,
+  openActiveUserPicker,
+} from '@/lib/active-user'
 import { defaultCurrencyList, getCurrency, type Currency } from '@/lib/currency'
 import {
   amountsForGroupCurrency,
@@ -12,7 +17,7 @@ import {
   resolveConversionRate,
 } from '@/lib/currency-conversion'
 import { pragueToday } from '@/lib/dashboard'
-import { useCurrencyRate } from '@/lib/hooks'
+import { useActiveUser, useCurrencyRate } from '@/lib/hooks'
 import { randomId } from '@/lib/random'
 import { cn, formatCurrency, getCurrencyFromGroup } from '@/lib/utils'
 import { trpc } from '@/trpc/client'
@@ -45,7 +50,9 @@ export function QuickAddForm({ groupId }: { groupId: string }) {
   const [amount, setAmount] = useState('')
   const [title, setTitle] = useState('')
   const [paidBy, setPaidBy] = useState<string>()
+  const [payerTouched, setPayerTouched] = useState(false)
   const [paidFor, setPaidFor] = useState<string[]>([])
+  const activeUser = useActiveUser(groupId)
   const [date, setDate] = useState(() => pragueToday())
   const [category, setCategory] = useState(0)
   const [notes, setNotes] = useState('')
@@ -56,13 +63,19 @@ export function QuickAddForm({ groupId }: { groupId: string }) {
   const [manualRate, setManualRate] = useState(false)
 
   useEffect(() => {
-    if (!group || paidBy) return
+    if (!group) return
     const ids = group.participants.map((p) => p.id)
+    setPaidFor((current) => (current.length > 0 ? current : ids))
+    if (payerTouched) return
+    // Last payer on this device, then the person chosen in "Kdo jsi?".
+    // Never the first participant: that is whoever created the group.
     const last = localStorage.getItem(`${groupId}-lastPayer`)
-    const active = localStorage.getItem(`${groupId}-activeUser`)
-    setPaidBy([last, active].find((id) => id && ids.includes(id)) ?? ids[0])
-    setPaidFor(ids)
-  }, [group, groupId, paidBy])
+    const stored = localStorage.getItem(activeUserStorageKey(groupId))
+    const payer = [last, stored, activeUser].find(
+      (id): id is string => !!id && ids.includes(id),
+    )
+    setPaidBy(payer)
+  }, [group, groupId, activeUser, payerTouched])
 
   useEffect(() => {
     if (!group) return
@@ -103,8 +116,14 @@ export function QuickAddForm({ groupId }: { groupId: string }) {
   })
 
   if (!group || currencyCode === undefined) return null
+  const participantIds = group.participants.map((p) => p.id)
+  const me = chosenParticipantId(activeUser, participantIds)
   const name = (id?: string) =>
     group.participants.find((p) => p.id === id)?.name ?? ''
+  const labelOf = (id?: string) => {
+    if (!id) return t('pickYou')
+    return id === me ? t('you') : name(id)
+  }
   const valid = money != null && !!paidBy && paidFor.length > 0
   const showRateInput =
     converting &&
@@ -118,7 +137,7 @@ export function QuickAddForm({ groupId }: { groupId: string }) {
   const splitLabel =
     paidFor.length === group.participants.length
       ? t('splitEvenly')
-      : t('onlyFor', { name: name(paidFor[0]) })
+      : t('onlyFor', { name: labelOf(paidFor[0]) })
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -283,8 +302,16 @@ export function QuickAddForm({ groupId }: { groupId: string }) {
       />
 
       <div className="flex gap-2 overflow-hidden">
-        <button type="button" className={chip} onClick={() => setOpen(true)}>
-          💳 {name(paidBy)}
+        <button
+          type="button"
+          className={chip}
+          data-testid="quick-payer"
+          onClick={() => {
+            if (!me) openActiveUserPicker()
+            setOpen(true)
+          }}
+        >
+          💳 {labelOf(paidBy)}
         </button>
         <button type="button" className={chip} onClick={() => setOpen(true)}>
           ⚖️ {splitLabel}
@@ -327,15 +354,19 @@ export function QuickAddForm({ groupId }: { groupId: string }) {
                 <button
                   key={p.id}
                   type="button"
-                  onClick={() => setPaidBy(p.id)}
+                  onClick={() => {
+                    setPayerTouched(true)
+                    setPaidBy(p.id)
+                  }}
                   className={cn(
                     'clay-sm px-3 py-1.5 font-bold',
                     paidBy === p.id
                       ? 'bg-sage-strong text-white'
                       : 'bg-background',
+                    p.id === me && 'ring-2 ring-primary/50',
                   )}
                 >
-                  {p.name}
+                  {labelOf(p.id)}
                 </button>
               ))}
             </div>
@@ -359,7 +390,7 @@ export function QuickAddForm({ groupId }: { groupId: string }) {
                     )}
                   >
                     {on ? '✓ ' : ''}
-                    {p.name}
+                    {labelOf(p.id)}
                   </button>
                 )
               })}

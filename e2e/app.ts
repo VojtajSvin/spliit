@@ -235,10 +235,10 @@ export function paidForRow(page: Page, participant: string): Locator {
  * Makes `name` the active user for this group.
  *
  * Goes through the app's own migration path rather than writing the id
- * directly: ExpenseList resolves `newGroup-activeUser` from a participant name
- * to an id on mount. Writing `<groupId>-activeUser` by hand would not survive,
- * because the shared fixture re-seeds `newGroup-activeUser` on every
- * navigation and that migration always wins.
+ * directly: the group layout resolves `newGroup-activeUser` from a participant
+ * name to an id on mount. Writing `<groupId>-activeUser` by hand would not
+ * survive, because the shared fixture re-seeds `newGroup-activeUser` on every
+ * navigation and that migration always wins when the group has no choice yet.
  */
 export async function setActiveUser(
   page: Page,

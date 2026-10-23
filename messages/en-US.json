@@ -354,6 +354,7 @@
     }
   },
   "Balances": {
+    "you": "You",
     "title": "Balances",
     "description": "This is the amount that each participant paid or was paid for.",
     "Reimbursements": {
@@ -365,6 +366,7 @@
     }
   },
   "Stats": {
+    "you": "You",
     "title": "Stats",
     "range": {
       "label": "Period",
@@ -605,6 +607,14 @@
     "title": "Přehled",
     "hello": "Ahoj! 👋",
     "owes": "{from} dluží {to}",
+    "youOwe": "Dlužíš {to}",
+    "owesYou": "{from} ti dluží",
+    "youSettled": "S nikým nic nemáš 🎉",
+    "youSettledText": "Tvoje účty v téhle skupině jsou vyrovnané.",
+    "pickYou": "Kdo jsi?",
+    "pickYouText": "Vyber, kdo jsi, ať vidíš, kolik dlužíš nebo kolik ti dluží.",
+    "pickYouButton": "Vybrat",
+    "you": "Ty",
     "settled": "Jste vyrovnaní 🎉",
     "settledText": "Nikdo nikomu nic nedluží.",
     "settle": "Vyrovnat",
@@ -679,6 +689,8 @@
     "currency": "Měna",
     "rateLoading": "Načítám kurz…",
     "rateMissing": "Zadej kurz",
-    "rate": "Směnný kurz"
+    "rate": "Směnný kurz",
+    "you": "Ty",
+    "pickYou": "Kdo jsi?"
   }
 }

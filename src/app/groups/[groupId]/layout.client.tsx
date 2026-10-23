@@ -1,7 +1,9 @@
 'use client'
 
 import { DeleteGroupNotice } from '@/app/groups/[groupId]/delete-group-notice'
+import { ActiveUserModal } from '@/app/groups/[groupId]/expenses/active-user-modal'
 import { useToast } from '@/components/ui/use-toast'
+import { claimPendingActiveUser } from '@/lib/active-user'
 import { trpc } from '@/trpc/client'
 import { useTranslations } from 'next-intl'
 import { PropsWithChildren, useEffect } from 'react'
@@ -27,6 +29,11 @@ export function GroupLayoutClient({
     }
   }, [data])
 
+  useEffect(() => {
+    if (!data?.group) return
+    claimPendingActiveUser(groupId, data.group.participants)
+  }, [data?.group, groupId])
+
   const props =
     isLoading || !data?.group
       ? { isLoading: true as const, groupId, group: undefined }
@@ -48,6 +55,7 @@ export function GroupLayoutClient({
       <DeleteGroupNotice />
       {children}
       <SaveGroupLocally />
+      <ActiveUserModal groupId={groupId} />
       <GroupTabs groupId={groupId} />
     </CurrentGroupProvider>
   )
