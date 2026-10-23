@@ -21,6 +21,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import { chosenParticipantId } from '@/lib/active-user'
 import { useActiveUser } from '@/lib/hooks'
 import { getCurrencyFromGroup } from '@/lib/utils'
 import { trpc } from '@/trpc/client'
@@ -32,7 +33,10 @@ export function TotalsPageClient() {
   const { groupId, group } = useCurrentGroup()
   const activeUser = useActiveUser(groupId)
   const participantId =
-    activeUser && activeUser !== 'None' ? activeUser : undefined
+    chosenParticipantId(
+      activeUser,
+      group?.participants.map((p) => p.id) ?? [],
+    ) ?? undefined
 
   const [period, setPeriod] = useState<StatsPeriod>('all')
   const [customRange, setCustomRange] = useState<StatsRange>({})
@@ -84,6 +88,7 @@ export function TotalsPageClient() {
       <ParticipantSpendingStats
         participants={data?.participants}
         currency={currency}
+        activeParticipantId={participantId}
       />
       <CategoryBreakdown
         groupId={groupId}

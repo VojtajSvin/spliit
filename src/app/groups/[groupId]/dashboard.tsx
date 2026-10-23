@@ -2,7 +2,13 @@
 
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
+import {
+  chosenParticipantId,
+  openActiveUserPicker,
+  settlementForParticipant,
+} from '@/lib/active-user'
 import { TrackPage } from '@/lib/analytics/track-page'
+import { useActiveUserState } from '@/lib/hooks'
 import {
   cn,
   formatCurrency,
@@ -15,7 +21,6 @@ import { useLocale, useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useEffect } from 'react'
 import { useCurrentGroup } from './current-group-context'
-import { ActiveUserModal } from './expenses/active-user-modal'
 import { GroupSwitcher } from './group-switcher'
 
 const TILE_COLORS = [
@@ -54,6 +59,7 @@ export function GroupDashboard() {
   const { groupId, group } = useCurrentGroup()
   const t = useTranslations('Dashboard')
   const locale = useLocale()
+  const { ready, activeUser } = useActiveUserState(groupId)
   const utils = trpc.useUtils()
   const { data, isLoading, isError } = trpc.groups.dashboard.useQuery({
     groupId,
@@ -72,7 +78,17 @@ export function GroupDashboard() {
   const money = (amount: number) => formatCurrency(currency, amount, locale)
   const name = (id: string) =>
     group.participants.find((p) => p.id === id)?.name ?? ''
-  const debt = data.reimbursements[0]
+  const me = ready
+    ? chosenParticipantId(
+        activeUser,
+        group.participants.map((p) => p.id),
+      )
+    : null
+  // Only a settlement that involves the person on this device. The group's
+  // first suggestion is someone else's debt (often whoever created the group).
+  const debt = me ? settlementForParticipant(data.reimbursements, me) : null
+  const label = (id: string, fallback: string) =>
+    id === me ? t('you') : fallback
   const fmtDay = (d: string | null) =>
     d
       ? new Intl.DateTimeFormat(locale, {
@@ -113,18 +129,36 @@ export function GroupDashboard() {
     <div className="flex flex-col gap-4" data-testid="group-dashboard">
       <TrackPage path={`/groups/${groupId}`} />
       <GroupSwitcher groupId={groupId} groupName={group.name} />
-      <ActiveUserModal groupId={groupId} />
 
-      {/* Hero */}
+      {/* Hero — from the participant chosen on this device */}
       <section className="clay bg-peach relative overflow-hidden p-5 pr-24">
         <div className="absolute -right-2 bottom-0 text-[84px] leading-none select-none drop-shadow-md">
-          {debt ? '🪴' : '🎉'}
+          {!ready ? '👋' : !me ? '🙋' : debt ? '🪴' : '🎉'}
         </div>
-        <p className="font-extrabold text-lg">{t('hello')}</p>
-        {debt ? (
+        {!ready ? (
+          <Skeleton className="h-24 w-3/4" />
+        ) : !me ? (
           <>
+            <p className="font-extrabold text-lg">{t('pickYou')}</p>
             <p className="mt-2 text-sm font-semibold text-foreground/70">
-              {t('owes', { from: name(debt.from), to: name(debt.to) })}
+              {t('pickYouText')}
+            </p>
+            <Button
+              className="mt-4"
+              size="lg"
+              onClick={() => openActiveUserPicker()}
+              data-testid="dashboard-pick-you"
+            >
+              {t('pickYouButton')}
+            </Button>
+          </>
+        ) : debt ? (
+          <>
+            <p className="font-extrabold text-lg">{t('hello')}</p>
+            <p className="mt-2 text-sm font-semibold text-foreground/70">
+              {debt.from === me
+                ? t('youOwe', { to: name(debt.to) })
+                : t('owesYou', { from: name(debt.from) })}
             </p>
             <p
               className="text-3xl font-black tracking-tight mt-1"
@@ -142,8 +176,9 @@ export function GroupDashboard() {
           </>
         ) : (
           <>
-            <p className="text-2xl font-black mt-2">{t('settled')}</p>
-            <p className="text-sm text-foreground/70">{t('settledText')}</p>
+            <p className="font-extrabold text-lg">{t('hello')}</p>
+            <p className="text-2xl font-black mt-2">{t('youSettled')}</p>
+            <p className="text-sm text-foreground/70">{t('youSettledText')}</p>
           </>
         )}
       </section>
@@ -348,7 +383,9 @@ export function GroupDashboard() {
                     backgroundColor: DONUT_COLORS[i % DONUT_COLORS.length],
                   }}
                 />
-                <span className="flex-1 font-semibold truncate">{p.name}</span>
+                <span className="flex-1 font-semibold truncate">
+                  {label(p.participantId, p.name)}
+                </span>
                 <span className="font-bold">
                   {Math.round((p.amount / payerTotal) * 100)} %
                 </span>

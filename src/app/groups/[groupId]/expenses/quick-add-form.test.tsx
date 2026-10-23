@@ -78,6 +78,7 @@ beforeAll(() => {
 
 beforeEach(() => {
   localStorage.clear()
+  localStorage.setItem('g1-activeUser', 'a')
   mockMutateAsync.mockClear()
   mockPush.mockClear()
   global.fetch = jest.fn(async (url: string) => {
@@ -119,8 +120,33 @@ describe('QuickAddForm currency', () => {
     await waitFor(() => expect(mockMutateAsync).toHaveBeenCalled())
     const values = mockMutateAsync.mock.calls[0][0].expenseFormValues
     expect(values.amount).toBe(12050)
+    expect(values.paidBy).toBe('a')
     expect(values.originalCurrency).toBeUndefined()
     expect(values.conversionRate).toBeUndefined()
+  })
+
+  it('defaults the payer to the active participant, not the first one', async () => {
+    localStorage.setItem('g1-activeUser', 'b')
+    await shown()
+    expect(screen.getByTestId('quick-payer')).toHaveTextContent('Ty')
+    fireEvent.change(screen.getByTestId('quick-amount'), {
+      target: { value: '10' },
+    })
+    fireEvent.click(screen.getByRole('button', { name: 'Přidat' }))
+    await waitFor(() => expect(mockMutateAsync).toHaveBeenCalled())
+    expect(mockMutateAsync.mock.calls[0][0].expenseFormValues.paidBy).toBe('b')
+  })
+
+  it('does not submit as the group owner when nobody is chosen', async () => {
+    localStorage.removeItem('g1-activeUser')
+    await shown()
+    expect(screen.getByTestId('quick-payer')).toHaveTextContent('Kdo jsi?')
+    fireEvent.change(screen.getByTestId('quick-amount'), {
+      target: { value: '10' },
+    })
+    expect(screen.getByRole('button', { name: 'Přidat' })).toBeDisabled()
+    fireEvent.click(screen.getByRole('button', { name: 'Přidat' }))
+    expect(mockMutateAsync).not.toHaveBeenCalled()
   })
 
   it('converts a fetched foreign amount into CZK and keeps the original', async () => {

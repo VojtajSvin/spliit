@@ -207,7 +207,8 @@ export function ExpenseForm({
           return lastPayer
         }
         const activeUser = localStorage.getItem(`${group.id}-activeUser`)
-        if (activeUser && activeUser !== 'None') return activeUser
+        if (activeUser && group.participants.some((p) => p.id === activeUser))
+          return activeUser
       }
     }
     return field?.value

@@ -32,6 +32,12 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Locale } from '@/i18n/request'
+import {
+  ACTIVE_USER_NONE,
+  NEW_GROUP_ACTIVE_USER_FOR_KEY,
+  NEW_GROUP_ACTIVE_USER_KEY,
+  persistActiveUser,
+} from '@/lib/active-user'
 import { useAnalytics } from '@/lib/analytics/context'
 import { getGroup } from '@/lib/api'
 import { defaultCurrencyList, getCurrency } from '@/lib/currency'
@@ -130,13 +136,16 @@ export function GroupForm({
     if (!activeUser) return
     if (group?.id) {
       const participant = group.participants.find((p) => p.name === activeUser)
-      if (participant?.id) {
-        localStorage.setItem(`${group.id}-activeUser`, participant.id)
-      } else {
-        localStorage.setItem(`${group.id}-activeUser`, activeUser)
-      }
+      // "Žádný" is not a participant. Store the sentinel, never a made-up id.
+      persistActiveUser(group.id, participant?.id ?? ACTIVE_USER_NONE)
+      return
+    }
+    const names = form.getValues('participants').map((p) => p.name)
+    if (names.includes(activeUser)) {
+      localStorage.setItem(NEW_GROUP_ACTIVE_USER_KEY, activeUser)
     } else {
-      localStorage.setItem('newGroup-activeUser', activeUser)
+      localStorage.removeItem(NEW_GROUP_ACTIVE_USER_KEY)
+      localStorage.removeItem(NEW_GROUP_ACTIVE_USER_FOR_KEY)
     }
   }
 
