@@ -1,5 +1,10 @@
 import { Currency } from './currency'
-import { dateOnlyToLocalDate, formatCurrency, formatDateOnly } from './utils'
+import {
+  dateOnlyToLocalDate,
+  formatCurrency,
+  formatDateOnly,
+  formatForeignAmount,
+} from './utils'
 
 describe('formatCurrency', () => {
   const currency: Currency = {
@@ -101,6 +106,15 @@ describe('dateOnlyToLocalDate', () => {
 
     expect(date.getMonth()).toBe(7)
     expect(date.getDate()).toBe(31)
+  })
+})
+
+describe('formatForeignAmount', () => {
+  it('hides group-currency expenses and shows a foreign original', () => {
+    expect(formatForeignAmount(null, null, 'CZK', 'cs-CZ')).toBeNull()
+    expect(formatForeignAmount(12050, 'CZK', 'CZK', 'cs-CZ')).toBeNull()
+    expect(formatForeignAmount(10000, 'EUR', 'CZK', 'cs-CZ')).toMatch(/100/)
+    expect(formatForeignAmount(10000, 'EUR', 'CZK', 'cs-CZ')).toMatch(/€/)
   })
 })
 

@@ -675,6 +675,10 @@
     "category": "Kategorie",
     "notes": "Poznámka",
     "fullForm": "Otevřít plný formulář",
-    "error": "Výdaj se nepodařilo uložit. Zkus to znovu."
+    "error": "Výdaj se nepodařilo uložit. Zkus to znovu.",
+    "currency": "Měna",
+    "rateLoading": "Načítám kurz…",
+    "rateMissing": "Zadej kurz",
+    "rate": "Směnný kurz"
   }
 }

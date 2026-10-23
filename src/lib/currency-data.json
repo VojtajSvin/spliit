@@ -305,6 +305,24 @@
       "name_plural": "Colombian pesos",
       "rounding": 0,
       "decimal_digits": 0
+    },
+    "LKR": {
+      "name": "Rupee Sri Lanka",
+      "symbol_native": "SL Re",
+      "symbol": "SLRs",
+      "code": "LKR",
+      "name_plural": "Sri Lankan rupees",
+      "rounding": 0,
+      "decimal_digits": 2
+    },
+    "MVR": {
+      "name": "Maldivian rufiyaa",
+      "symbol_native": "Rf",
+      "symbol": "Rf",
+      "code": "MVR",
+      "name_plural": "Maldivian rufiyaa",
+      "rounding": 0,
+      "decimal_digits": 2
     }
   },
   "ca": {
@@ -613,6 +631,24 @@
       "name_plural": "Colombian pesos",
       "rounding": 0,
       "decimal_digits": 0
+    },
+    "LKR": {
+      "name": "rupia de Sri Lanka",
+      "symbol_native": "SL Re",
+      "symbol": "SLRs",
+      "code": "LKR",
+      "name_plural": "Sri Lankan rupees",
+      "rounding": 0,
+      "decimal_digits": 2
+    },
+    "MVR": {
+      "name": "Maldivian rufiyaa",
+      "symbol_native": "Rf",
+      "symbol": "Rf",
+      "code": "MVR",
+      "name_plural": "Maldivian rufiyaa",
+      "rounding": 0,
+      "decimal_digits": 2
     }
   },
   "cs-CZ": {
@@ -921,6 +957,24 @@
       "name_plural": "Colombian pesos",
       "rounding": 0,
       "decimal_digits": 0
+    },
+    "LKR": {
+      "name": "srílanská rupie",
+      "symbol_native": "SL Re",
+      "symbol": "SLRs",
+      "code": "LKR",
+      "name_plural": "Sri Lankan rupees",
+      "rounding": 0,
+      "decimal_digits": 2
+    },
+    "MVR": {
+      "name": "maledivská rufiyaa",
+      "symbol_native": "Rf",
+      "symbol": "Rf",
+      "code": "MVR",
+      "name_plural": "Maldivian rufiyaa",
+      "rounding": 0,
+      "decimal_digits": 2
     }
   },
   "de-DE": {
@@ -1229,6 +1283,24 @@
       "name_plural": "Colombian pesos",
       "rounding": 0,
       "decimal_digits": 0
+    },
+    "LKR": {
+      "name": "Sri-Lanka-Rupie",
+      "symbol_native": "SL Re",
+      "symbol": "SLRs",
+      "code": "LKR",
+      "name_plural": "Sri Lankan rupees",
+      "rounding": 0,
+      "decimal_digits": 2
+    },
+    "MVR": {
+      "name": "Maldivian rufiyaa",
+      "symbol_native": "Rf",
+      "symbol": "Rf",
+      "code": "MVR",
+      "name_plural": "Maldivian rufiyaa",
+      "rounding": 0,
+      "decimal_digits": 2
     }
   },
   "en-US": {
@@ -1537,6 +1609,24 @@
       "name_plural": "Colombian pesos",
       "rounding": 0,
       "decimal_digits": 0
+    },
+    "LKR": {
+      "name": "Sri Lankan Rupee",
+      "symbol_native": "SL Re",
+      "symbol": "SLRs",
+      "code": "LKR",
+      "name_plural": "Sri Lankan rupees",
+      "rounding": 0,
+      "decimal_digits": 2
+    },
+    "MVR": {
+      "name": "Maldivian rufiyaa",
+      "symbol_native": "Rf",
+      "symbol": "Rf",
+      "code": "MVR",
+      "name_plural": "Maldivian rufiyaa",
+      "rounding": 0,
+      "decimal_digits": 2
     }
   },
   "es": {
@@ -1845,6 +1935,24 @@
       "name_plural": "Colombian pesos",
       "rounding": 0,
       "decimal_digits": 0
+    },
+    "LKR": {
+      "name": "rupia esrilanquesa",
+      "symbol_native": "SL Re",
+      "symbol": "SLRs",
+      "code": "LKR",
+      "name_plural": "Sri Lankan rupees",
+      "rounding": 0,
+      "decimal_digits": 2
+    },
+    "MVR": {
+      "name": "Maldivian rufiyaa",
+      "symbol_native": "Rf",
+      "symbol": "Rf",
+      "code": "MVR",
+      "name_plural": "Maldivian rufiyaa",
+      "rounding": 0,
+      "decimal_digits": 2
     }
   },
   "eu": {
@@ -2153,6 +2261,24 @@
       "name_plural": "Colombian pesos",
       "rounding": 0,
       "decimal_digits": 0
+    },
+    "LKR": {
+      "name": "Sri Lankako errupia",
+      "symbol_native": "SL Re",
+      "symbol": "SLRs",
+      "code": "LKR",
+      "name_plural": "Sri Lankan rupees",
+      "rounding": 0,
+      "decimal_digits": 2
+    },
+    "MVR": {
+      "name": "Maldivian rufiyaa",
+      "symbol_native": "Rf",
+      "symbol": "Rf",
+      "code": "MVR",
+      "name_plural": "Maldivian rufiyaa",
+      "rounding": 0,
+      "decimal_digits": 2
     }
   },
   "fr-FR": {
@@ -2461,6 +2587,24 @@
       "name_plural": "Colombian pesos",
       "rounding": 0,
       "decimal_digits": 0
+    },
+    "LKR": {
+      "name": "roupie srilankaise",
+      "symbol_native": "SL Re",
+      "symbol": "SLRs",
+      "code": "LKR",
+      "name_plural": "Sri Lankan rupees",
+      "rounding": 0,
+      "decimal_digits": 2
+    },
+    "MVR": {
+      "name": "Maldivian rufiyaa",
+      "symbol_native": "Rf",
+      "symbol": "Rf",
+      "code": "MVR",
+      "name_plural": "Maldivian rufiyaa",
+      "rounding": 0,
+      "decimal_digits": 2
     }
   },
   "it-IT": {
@@ -2769,6 +2913,24 @@
       "name_plural": "Colombian pesos",
       "rounding": 0,
       "decimal_digits": 0
+    },
+    "LKR": {
+      "name": "rupia di Sri Lanka",
+      "symbol_native": "SL Re",
+      "symbol": "SLRs",
+      "code": "LKR",
+      "name_plural": "Sri Lankan rupees",
+      "rounding": 0,
+      "decimal_digits": 2
+    },
+    "MVR": {
+      "name": "Maldivian rufiyaa",
+      "symbol_native": "Rf",
+      "symbol": "Rf",
+      "code": "MVR",
+      "name_plural": "Maldivian rufiyaa",
+      "rounding": 0,
+      "decimal_digits": 2
     }
   },
   "nl-NL": {
@@ -3077,6 +3239,24 @@
       "name_plural": "Colombian pesos",
       "rounding": 0,
       "decimal_digits": 0
+    },
+    "LKR": {
+      "name": "Sri Lankaanse roepie",
+      "symbol_native": "SL Re",
+      "symbol": "SLRs",
+      "code": "LKR",
+      "name_plural": "Sri Lankan rupees",
+      "rounding": 0,
+      "decimal_digits": 2
+    },
+    "MVR": {
+      "name": "Maldivian rufiyaa",
+      "symbol_native": "Rf",
+      "symbol": "Rf",
+      "code": "MVR",
+      "name_plural": "Maldivian rufiyaa",
+      "rounding": 0,
+      "decimal_digits": 2
     }
   },
   "pl-PL": {
@@ -3385,6 +3565,24 @@
       "name_plural": "Colombian pesos",
       "rounding": 0,
       "decimal_digits": 0
+    },
+    "LKR": {
+      "name": "rupia lankijska",
+      "symbol_native": "SL Re",
+      "symbol": "SLRs",
+      "code": "LKR",
+      "name_plural": "Sri Lankan rupees",
+      "rounding": 0,
+      "decimal_digits": 2
+    },
+    "MVR": {
+      "name": "Maldivian rufiyaa",
+      "symbol_native": "Rf",
+      "symbol": "Rf",
+      "code": "MVR",
+      "name_plural": "Maldivian rufiyaa",
+      "rounding": 0,
+      "decimal_digits": 2
     }
   },
   "pt": {
@@ -3693,6 +3891,24 @@
       "name_plural": "Colombian pesos",
       "rounding": 0,
       "decimal_digits": 0
+    },
+    "LKR": {
+      "name": "Rupia ceilandesa",
+      "symbol_native": "SL Re",
+      "symbol": "SLRs",
+      "code": "LKR",
+      "name_plural": "Sri Lankan rupees",
+      "rounding": 0,
+      "decimal_digits": 2
+    },
+    "MVR": {
+      "name": "Maldivian rufiyaa",
+      "symbol_native": "Rf",
+      "symbol": "Rf",
+      "code": "MVR",
+      "name_plural": "Maldivian rufiyaa",
+      "rounding": 0,
+      "decimal_digits": 2
     }
   },
   "pt-BR": {
@@ -4001,6 +4217,24 @@
       "name_plural": "Colombian pesos",
       "rounding": 0,
       "decimal_digits": 0
+    },
+    "LKR": {
+      "name": "Rupia ceilandesa",
+      "symbol_native": "SL Re",
+      "symbol": "SLRs",
+      "code": "LKR",
+      "name_plural": "Sri Lankan rupees",
+      "rounding": 0,
+      "decimal_digits": 2
+    },
+    "MVR": {
+      "name": "Maldivian rufiyaa",
+      "symbol_native": "Rf",
+      "symbol": "Rf",
+      "code": "MVR",
+      "name_plural": "Maldivian rufiyaa",
+      "rounding": 0,
+      "decimal_digits": 2
     }
   },
   "ro": {
@@ -4309,6 +4543,24 @@
       "name_plural": "Colombian pesos",
       "rounding": 0,
       "decimal_digits": 0
+    },
+    "LKR": {
+      "name": "rupie srilankeză",
+      "symbol_native": "SL Re",
+      "symbol": "SLRs",
+      "code": "LKR",
+      "name_plural": "Sri Lankan rupees",
+      "rounding": 0,
+      "decimal_digits": 2
+    },
+    "MVR": {
+      "name": "Maldivian rufiyaa",
+      "symbol_native": "Rf",
+      "symbol": "Rf",
+      "code": "MVR",
+      "name_plural": "Maldivian rufiyaa",
+      "rounding": 0,
+      "decimal_digits": 2
     }
   },
   "fi": {
@@ -4617,6 +4869,24 @@
       "name_plural": "Colombian pesos",
       "rounding": 0,
       "decimal_digits": 0
+    },
+    "LKR": {
+      "name": "Sri Lankan rupia",
+      "symbol_native": "SL Re",
+      "symbol": "SLRs",
+      "code": "LKR",
+      "name_plural": "Sri Lankan rupees",
+      "rounding": 0,
+      "decimal_digits": 2
+    },
+    "MVR": {
+      "name": "Maldivian rufiyaa",
+      "symbol_native": "Rf",
+      "symbol": "Rf",
+      "code": "MVR",
+      "name_plural": "Maldivian rufiyaa",
+      "rounding": 0,
+      "decimal_digits": 2
     }
   },
   "tr-TR": {
@@ -4925,6 +5195,24 @@
       "name_plural": "Colombian pesos",
       "rounding": 0,
       "decimal_digits": 0
+    },
+    "LKR": {
+      "name": "Sri Lanka Rupisi",
+      "symbol_native": "SL Re",
+      "symbol": "SLRs",
+      "code": "LKR",
+      "name_plural": "Sri Lankan rupees",
+      "rounding": 0,
+      "decimal_digits": 2
+    },
+    "MVR": {
+      "name": "Maldivian rufiyaa",
+      "symbol_native": "Rf",
+      "symbol": "Rf",
+      "code": "MVR",
+      "name_plural": "Maldivian rufiyaa",
+      "rounding": 0,
+      "decimal_digits": 2
     }
   },
   "ru-RU": {
@@ -5233,6 +5521,24 @@
       "name_plural": "Colombian pesos",
       "rounding": 0,
       "decimal_digits": 0
+    },
+    "LKR": {
+      "name": "Шри-ланкийская рупия",
+      "symbol_native": "SL Re",
+      "symbol": "SLRs",
+      "code": "LKR",
+      "name_plural": "Sri Lankan rupees",
+      "rounding": 0,
+      "decimal_digits": 2
+    },
+    "MVR": {
+      "name": "Maldivian rufiyaa",
+      "symbol_native": "Rf",
+      "symbol": "Rf",
+      "code": "MVR",
+      "name_plural": "Maldivian rufiyaa",
+      "rounding": 0,
+      "decimal_digits": 2
     }
   },
   "uk-UA": {
@@ -5541,6 +5847,24 @@
       "name_plural": "Colombian pesos",
       "rounding": 0,
       "decimal_digits": 0
+    },
+    "LKR": {
+      "name": "шрі-ланкійська рупія",
+      "symbol_native": "SL Re",
+      "symbol": "SLRs",
+      "code": "LKR",
+      "name_plural": "Sri Lankan rupees",
+      "rounding": 0,
+      "decimal_digits": 2
+    },
+    "MVR": {
+      "name": "Maldivian rufiyaa",
+      "symbol_native": "Rf",
+      "symbol": "Rf",
+      "code": "MVR",
+      "name_plural": "Maldivian rufiyaa",
+      "rounding": 0,
+      "decimal_digits": 2
     }
   },
   "he": {
@@ -5849,6 +6173,24 @@
       "name_plural": "Colombian pesos",
       "rounding": 0,
       "decimal_digits": 0
+    },
+    "LKR": {
+      "name": "רופי סרי לנקי",
+      "symbol_native": "SL Re",
+      "symbol": "SLRs",
+      "code": "LKR",
+      "name_plural": "Sri Lankan rupees",
+      "rounding": 0,
+      "decimal_digits": 2
+    },
+    "MVR": {
+      "name": "Maldivian rufiyaa",
+      "symbol_native": "Rf",
+      "symbol": "Rf",
+      "code": "MVR",
+      "name_plural": "Maldivian rufiyaa",
+      "rounding": 0,
+      "decimal_digits": 2
     }
   },
   "ar": {
@@ -6157,6 +6499,24 @@
       "name_plural": "Colombian pesos",
       "rounding": 0,
       "decimal_digits": 0
+    },
+    "LKR": {
+      "name": "روبية سريلانكية",
+      "symbol_native": "SL Re",
+      "symbol": "SLRs",
+      "code": "LKR",
+      "name_plural": "Sri Lankan rupees",
+      "rounding": 0,
+      "decimal_digits": 2
+    },
+    "MVR": {
+      "name": "Maldivian rufiyaa",
+      "symbol_native": "Rf",
+      "symbol": "Rf",
+      "code": "MVR",
+      "name_plural": "Maldivian rufiyaa",
+      "rounding": 0,
+      "decimal_digits": 2
     }
   },
   "ko": {
@@ -6465,6 +6825,24 @@
       "name_plural": "Colombian pesos",
       "rounding": 0,
       "decimal_digits": 0
+    },
+    "LKR": {
+      "name": "스리랑카 루피",
+      "symbol_native": "SL Re",
+      "symbol": "SLRs",
+      "code": "LKR",
+      "name_plural": "Sri Lankan rupees",
+      "rounding": 0,
+      "decimal_digits": 2
+    },
+    "MVR": {
+      "name": "Maldivian rufiyaa",
+      "symbol_native": "Rf",
+      "symbol": "Rf",
+      "code": "MVR",
+      "name_plural": "Maldivian rufiyaa",
+      "rounding": 0,
+      "decimal_digits": 2
     }
   },
   "ja-JP": {
@@ -6773,6 +7151,24 @@
       "name_plural": "Colombian pesos",
       "rounding": 0,
       "decimal_digits": 0
+    },
+    "LKR": {
+      "name": "スリランカ ルピー",
+      "symbol_native": "SL Re",
+      "symbol": "SLRs",
+      "code": "LKR",
+      "name_plural": "Sri Lankan rupees",
+      "rounding": 0,
+      "decimal_digits": 2
+    },
+    "MVR": {
+      "name": "Maldivian rufiyaa",
+      "symbol_native": "Rf",
+      "symbol": "Rf",
+      "code": "MVR",
+      "name_plural": "Maldivian rufiyaa",
+      "rounding": 0,
+      "decimal_digits": 2
     }
   },
   "zh-CN": {
@@ -7081,6 +7477,24 @@
       "name_plural": "Colombian pesos",
       "rounding": 0,
       "decimal_digits": 0
+    },
+    "LKR": {
+      "name": "斯里兰卡卢比",
+      "symbol_native": "SL Re",
+      "symbol": "SLRs",
+      "code": "LKR",
+      "name_plural": "Sri Lankan rupees",
+      "rounding": 0,
+      "decimal_digits": 2
+    },
+    "MVR": {
+      "name": "Maldivian rufiyaa",
+      "symbol_native": "Rf",
+      "symbol": "Rf",
+      "code": "MVR",
+      "name_plural": "Maldivian rufiyaa",
+      "rounding": 0,
+      "decimal_digits": 2
     }
   },
   "zh-TW": {
@@ -7389,6 +7803,24 @@
       "name_plural": "Colombian pesos",
       "rounding": 0,
       "decimal_digits": 0
+    },
+    "LKR": {
+      "name": "斯里兰卡卢比",
+      "symbol_native": "SL Re",
+      "symbol": "SLRs",
+      "code": "LKR",
+      "name_plural": "Sri Lankan rupees",
+      "rounding": 0,
+      "decimal_digits": 2
+    },
+    "MVR": {
+      "name": "Maldivian rufiyaa",
+      "symbol_native": "Rf",
+      "symbol": "Rf",
+      "code": "MVR",
+      "name_plural": "Maldivian rufiyaa",
+      "rounding": 0,
+      "decimal_digits": 2
     }
   }
 }

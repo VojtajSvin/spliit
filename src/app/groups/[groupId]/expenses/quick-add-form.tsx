@@ -1,14 +1,23 @@
 'use client'
 
+import { CurrencySelector } from '@/components/currency-selector'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useToast } from '@/components/ui/use-toast'
+import { Locale } from '@/i18n/request'
+import { defaultCurrencyList, getCurrency, type Currency } from '@/lib/currency'
+import {
+  amountsForGroupCurrency,
+  parseLocaleDecimal,
+  resolveConversionRate,
+} from '@/lib/currency-conversion'
 import { pragueToday } from '@/lib/dashboard'
+import { useCurrencyRate } from '@/lib/hooks'
 import { randomId } from '@/lib/random'
-import { amountAsMinorUnits, cn, getCurrencyFromGroup } from '@/lib/utils'
+import { cn, formatCurrency, getCurrencyFromGroup } from '@/lib/utils'
 import { trpc } from '@/trpc/client'
 import { ChevronDown, Loader2, X } from 'lucide-react'
-import { useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
@@ -23,6 +32,7 @@ const chip =
 export function QuickAddForm({ groupId }: { groupId: string }) {
   const t = useTranslations('QuickAdd')
   const tc = useTranslations('Categories')
+  const locale = useLocale() as Locale
   const router = useRouter()
   const { toast } = useToast()
   const utils = trpc.useUtils()
@@ -40,6 +50,10 @@ export function QuickAddForm({ groupId }: { groupId: string }) {
   const [category, setCategory] = useState(0)
   const [notes, setNotes] = useState('')
   const [open, setOpen] = useState(false)
+  // undefined until the group (and any remembered currency) has been read.
+  const [currencyCode, setCurrencyCode] = useState<string | undefined>()
+  const [customRate, setCustomRate] = useState('')
+  const [manualRate, setManualRate] = useState(false)
 
   useEffect(() => {
     if (!group || paidBy) return
@@ -50,17 +64,55 @@ export function QuickAddForm({ groupId }: { groupId: string }) {
     setPaidFor(ids)
   }, [group, groupId, paidBy])
 
-  if (!group) return null
-  const currency = getCurrencyFromGroup(group)
+  useEffect(() => {
+    if (!group) return
+    setCurrencyCode((current) => {
+      if (current !== undefined) return current
+      const last = localStorage.getItem(`${groupId}-lastCurrency`)
+      if (last && getCurrency(last, locale).code === last) return last
+      return group.currencyCode ?? ''
+    })
+  }, [group, groupId, locale])
+
+  const groupCurrency: Currency = group
+    ? getCurrencyFromGroup(group)
+    : getCurrency('CZK', locale)
+  const selectedCode = currencyCode || group?.currencyCode || ''
+  const selectedCurrency = getCurrency(selectedCode, locale)
+  const canConvert = !!groupCurrency.code
+  const converting =
+    canConvert &&
+    !!selectedCurrency.code &&
+    selectedCurrency.code !== groupCurrency.code
+  const exchangeRate = useCurrencyRate(
+    new Date(`${date}T00:00:00Z`),
+    converting ? selectedCurrency.code : '',
+    groupCurrency.code,
+  )
+  const rate = converting
+    ? resolveConversionRate(
+        manualRate || !exchangeRate.data ? customRate : '',
+        exchangeRate.data,
+      )
+    : null
+  const money = amountsForGroupCurrency({
+    enteredMajor: parseLocaleDecimal(amount) ?? NaN,
+    entered: converting ? selectedCurrency : groupCurrency,
+    group: groupCurrency,
+    rate,
+  })
+
+  if (!group || currencyCode === undefined) return null
   const name = (id?: string) =>
     group.participants.find((p) => p.id === id)?.name ?? ''
-  const amountNumber = Number(amount.replace(',', '.').replace(/\s/g, ''))
-  const valid =
-    amount !== '' &&
-    !Number.isNaN(amountNumber) &&
-    amountNumber > 0 &&
-    !!paidBy &&
-    paidFor.length > 0
+  const valid = money != null && !!paidBy && paidFor.length > 0
+  const showRateInput =
+    converting &&
+    (manualRate || (!exchangeRate.isLoading && !exchangeRate.data))
+  const convertedLabel =
+    converting && money
+      ? formatCurrency(groupCurrency, money.amount, locale)
+      : null
   const todayLabel =
     date === pragueToday() ? t('today') : date.split('-').reverse().join('. ')
   const splitLabel =
@@ -70,7 +122,7 @@ export function QuickAddForm({ groupId }: { groupId: string }) {
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!valid || !paidBy) return
+    if (!money || !paidBy || paidFor.length === 0) return
     try {
       await create.mutateAsync({
         groupId,
@@ -79,7 +131,14 @@ export function QuickAddForm({ groupId }: { groupId: string }) {
         expenseFormValues: {
           title: title.trim().length >= 2 ? title.trim() : t('defaultTitle'),
           expenseDate: new Date(`${date}T00:00:00Z`),
-          amount: amountAsMinorUnits(amountNumber, currency),
+          amount: money.amount,
+          ...(money.originalCurrency
+            ? {
+                originalAmount: money.originalAmount,
+                originalCurrency: money.originalCurrency,
+                conversionRate: money.conversionRate,
+              }
+            : {}),
           category,
           paidBy,
           paidFor: paidFor.map((participant) => ({ participant, shares: 100 })),
@@ -97,6 +156,8 @@ export function QuickAddForm({ groupId }: { groupId: string }) {
       return
     }
     localStorage.setItem(`${groupId}-lastPayer`, paidBy)
+    if (selectedCurrency.code)
+      localStorage.setItem(`${groupId}-lastCurrency`, selectedCurrency.code)
     utils.groups.invalidate()
     router.push(`/groups/${groupId}`)
   }
@@ -118,22 +179,98 @@ export function QuickAddForm({ groupId }: { groupId: string }) {
         </Link>
       </div>
 
-      <label className="clay-pressed bg-peach rounded-3xl px-4 py-2 flex items-baseline gap-2">
-        <input
-          autoFocus
-          inputMode="decimal"
-          enterKeyHint="next"
-          placeholder="0"
-          aria-label={t('amount')}
-          value={amount}
-          onChange={(e) => setAmount(e.target.value.replace(/[^0-9.,\s]/g, ''))}
-          className="w-full bg-transparent text-4xl font-black tracking-tight outline-none placeholder:text-foreground/30"
-          data-testid="quick-amount"
-        />
-        <span className="text-2xl font-black text-foreground/60">
-          {currency.symbol}
-        </span>
-      </label>
+      <div className="clay-pressed bg-peach rounded-3xl px-4 py-2">
+        <div className="flex items-center gap-2">
+          <input
+            autoFocus
+            inputMode="decimal"
+            enterKeyHint="next"
+            placeholder="0"
+            aria-label={t('amount')}
+            value={amount}
+            onChange={(e) =>
+              setAmount(e.target.value.replace(/[^0-9.,\s]/g, ''))
+            }
+            className="min-w-0 flex-1 bg-transparent text-4xl font-black tracking-tight outline-none placeholder:text-foreground/30"
+            data-testid="quick-amount"
+          />
+          {canConvert ? (
+            <CurrencySelector
+              compact
+              currencies={defaultCurrencyList(locale)}
+              defaultValue={selectedCurrency.code}
+              isLoading={converting && exchangeRate.isLoading}
+              onValueChange={(code) => {
+                if (code === currencyCode) return
+                setCurrencyCode(code)
+                setCustomRate('')
+                setManualRate(false)
+              }}
+            />
+          ) : (
+            <span className="text-2xl font-black text-foreground/60">
+              {groupCurrency.symbol}
+            </span>
+          )}
+        </div>
+        {converting && (
+          <div
+            className="mt-1 flex flex-wrap items-center justify-between gap-x-2 gap-y-1 text-xs font-bold"
+            data-testid="quick-conversion"
+          >
+            <span className="tabular-nums text-foreground/70">
+              {exchangeRate.isLoading && !manualRate
+                ? t('rateLoading')
+                : convertedLabel
+                  ? `≈ ${convertedLabel}`
+                  : showRateInput
+                    ? t('rateMissing')
+                    : null}
+            </span>
+            <span className="ml-auto flex items-center gap-1">
+              <span className="text-foreground/60">
+                1 {selectedCurrency.code} =
+              </span>
+              {showRateInput ? (
+                <input
+                  inputMode="decimal"
+                  aria-label={t('rate')}
+                  placeholder="0"
+                  value={customRate}
+                  onChange={(e) => {
+                    setManualRate(true)
+                    setCustomRate(e.target.value.replace(/[^0-9.,]/g, ''))
+                  }}
+                  className="w-16 border-b border-foreground/30 bg-transparent text-right outline-none"
+                  data-testid="quick-rate"
+                />
+              ) : (
+                <button
+                  type="button"
+                  className="underline decoration-foreground/30 underline-offset-2"
+                  onClick={() => {
+                    if (exchangeRate.data)
+                      setCustomRate(
+                        new Intl.NumberFormat(locale, {
+                          maximumFractionDigits: 6,
+                          useGrouping: false,
+                        }).format(exchangeRate.data),
+                      )
+                    setManualRate(true)
+                  }}
+                >
+                  {exchangeRate.data
+                    ? new Intl.NumberFormat(locale, {
+                        maximumFractionDigits: 6,
+                      }).format(exchangeRate.data)
+                    : '…'}
+                </button>
+              )}
+              <span className="text-foreground/60">{groupCurrency.symbol}</span>
+            </span>
+          </div>
+        )}
+      </div>
 
       <Input
         placeholder={t('titlePlaceholder')}

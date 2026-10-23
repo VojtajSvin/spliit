@@ -1,4 +1,5 @@
 import { Currency } from './currency'
+import { amountAsMinorUnits } from './utils'
 
 /**
  * Conversion rates are always expressed as "1 original currency = `rate` group currency",
@@ -49,4 +50,72 @@ export function convertToOriginalCurrency(
   const converted = groupAmount / rate
   if (!Number.isFinite(converted)) return null
   return converted.toFixed(originalCurrency.decimal_digits)
+}
+
+/** Accepts Czech comma decimals ("24,33") and spaces. */
+export function parseLocaleDecimal(value: string): number | null {
+  const normalized = value.trim().replace(/\s/g, '').replace(',', '.')
+  if (!/^\d*\.?\d+$/.test(normalized)) return null
+  const parsed = Number(normalized)
+  return Number.isFinite(parsed) ? parsed : null
+}
+
+/**
+ * Rate to store: a typed rate wins, otherwise the fetched ECB rate.
+ * Both are "1 original currency = `rate` group currency".
+ */
+export function resolveConversionRate(
+  customText: string,
+  fetched: number | undefined,
+): number | null {
+  const custom = parseLocaleDecimal(customText)
+  if (custom != null && custom > 0) return custom
+  if (fetched != null && Number.isFinite(fetched) && fetched > 0) return fetched
+  return null
+}
+
+export type GroupCurrencyAmounts = {
+  /** Minor units of the group currency. Balances, totals and budgets use this. */
+  amount: number
+  originalAmount?: number
+  originalCurrency?: string
+  conversionRate?: number
+}
+
+/**
+ * Turns an amount typed in `entered` into the minor units stored on an expense.
+ * The same currency (or a group with no ISO code) stores only `amount`, so
+ * existing group-currency expenses stay unchanged. A foreign currency also
+ * stores the original minor units, the code and the rate.
+ */
+export function amountsForGroupCurrency(input: {
+  enteredMajor: number
+  entered: Currency
+  group: Currency
+  rate: number | null
+}): GroupCurrencyAmounts | null {
+  const { enteredMajor, entered, group, rate } = input
+  if (!Number.isFinite(enteredMajor) || enteredMajor <= 0) return null
+
+  const foreign = !!entered.code && !!group.code && entered.code !== group.code
+  if (!foreign) {
+    const amount = amountAsMinorUnits(
+      enteredMajor,
+      group.code ? group : entered,
+    )
+    return amount > 0 ? { amount } : null
+  }
+
+  if (rate == null || !isUsableRate(rate)) return null
+  const converted = convertToGroupCurrency(enteredMajor, rate, group)
+  if (converted == null) return null
+  const amount = amountAsMinorUnits(Number(converted), group)
+  const originalAmount = amountAsMinorUnits(enteredMajor, entered)
+  if (amount === 0 || originalAmount === 0) return null
+  return {
+    amount,
+    originalAmount,
+    originalCurrency: entered.code,
+    conversionRate: rate,
+  }
 }

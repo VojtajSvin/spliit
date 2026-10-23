@@ -3,7 +3,12 @@
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { TrackPage } from '@/lib/analytics/track-page'
-import { cn, formatCurrency, getCurrencyFromGroup } from '@/lib/utils'
+import {
+  cn,
+  formatCurrency,
+  formatForeignAmount,
+  getCurrencyFromGroup,
+} from '@/lib/utils'
 import { trpc } from '@/trpc/client'
 import { ChevronRight, Plus } from 'lucide-react'
 import { useLocale, useTranslations } from 'next-intl'
@@ -202,37 +207,52 @@ export function GroupDashboard() {
           <p className="text-sm text-muted-foreground py-4">{t('empty')}</p>
         ) : (
           <ul className="divide-y divide-border">
-            {data.recent.map((e) => (
-              <li key={e.id}>
-                <Link
-                  href={`/groups/${groupId}/expenses/${e.id}/edit`}
-                  className="flex items-center gap-3 py-3"
-                >
-                  <span className="clay-sm bg-butter w-11 h-11 flex items-center justify-center text-xl shrink-0">
-                    {e.isReimbursement
-                      ? '🤝'
-                      : (GROUPING_EMOJI[e.categoryGrouping ?? ''] ?? '🧺')}
-                  </span>
-                  <span className="flex-1 min-w-0">
-                    <span className="block font-bold truncate">{e.title}</span>
-                    <span className="block text-xs text-foreground/60">
-                      {t('paidBy', { name: e.paidByName })} ·{' '}
-                      {new Intl.DateTimeFormat(locale, {
-                        day: 'numeric',
-                        month: 'numeric',
-                        timeZone: 'UTC',
-                      }).format(new Date(`${e.expenseDate}T00:00:00Z`))}
+            {data.recent.map((e) => {
+              const foreign = formatForeignAmount(
+                e.originalAmount,
+                e.originalCurrency,
+                currency.code,
+                locale,
+              )
+              return (
+                <li key={e.id}>
+                  <Link
+                    href={`/groups/${groupId}/expenses/${e.id}/edit`}
+                    className="flex items-center gap-3 py-3"
+                  >
+                    <span className="clay-sm bg-butter w-11 h-11 flex items-center justify-center text-xl shrink-0">
+                      {e.isReimbursement
+                        ? '🤝'
+                        : (GROUPING_EMOJI[e.categoryGrouping ?? ''] ?? '🧺')}
                     </span>
-                  </span>
-                  <span className="font-extrabold whitespace-nowrap">
-                    {money(e.amount)}
-                  </span>
-                  <span className="clay-sm bg-background w-8 h-8 flex items-center justify-center shrink-0">
-                    <ChevronRight className="w-4 h-4" />
-                  </span>
-                </Link>
-              </li>
-            ))}
+                    <span className="flex-1 min-w-0">
+                      <span className="block font-bold truncate">
+                        {e.title}
+                      </span>
+                      <span className="block text-xs text-foreground/60">
+                        {t('paidBy', { name: e.paidByName })} ·{' '}
+                        {new Intl.DateTimeFormat(locale, {
+                          day: 'numeric',
+                          month: 'numeric',
+                          timeZone: 'UTC',
+                        }).format(new Date(`${e.expenseDate}T00:00:00Z`))}
+                      </span>
+                    </span>
+                    <span className="text-right font-extrabold whitespace-nowrap">
+                      <span className="block">{money(e.amount)}</span>
+                      {foreign && (
+                        <span className="block text-xs font-bold text-foreground/60">
+                          {foreign}
+                        </span>
+                      )}
+                    </span>
+                    <span className="clay-sm bg-background w-8 h-8 flex items-center justify-center shrink-0">
+                      <ChevronRight className="w-4 h-4" />
+                    </span>
+                  </Link>
+                </li>
+              )
+            })}
           </ul>
         )}
       </section>

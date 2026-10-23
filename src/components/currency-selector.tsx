@@ -25,6 +25,8 @@ type Props = {
   /** Currency code to be selected by default. Overwriting this value will update current selection, too. */
   defaultValue: Currency['code']
   isLoading: boolean
+  /** Code-only trigger for tight layouts such as the quick-add amount row. */
+  compact?: boolean
 }
 
 export function CurrencySelector({
@@ -32,6 +34,7 @@ export function CurrencySelector({
   onValueChange,
   defaultValue,
   isLoading,
+  compact = false,
 }: Props) {
   const [open, setOpen] = useState(false)
   const [value, setValue] = useState<string>(defaultValue)
@@ -55,6 +58,7 @@ export function CurrencySelector({
             currency={selectedCurrency}
             open={open}
             isLoading={isLoading}
+            compact={compact}
           />
         </PopoverTrigger>
         <PopoverContent className="p-0" align="start">
@@ -78,6 +82,7 @@ export function CurrencySelector({
           currency={selectedCurrency}
           open={open}
           isLoading={isLoading}
+          compact={compact}
         />
       </DrawerTrigger>
       <DrawerContent className="p-0">
@@ -107,7 +112,12 @@ function CurrencyCommand({
       case 'EUR':
       case 'JPY':
       case 'GBP':
+      case 'CHF':
       case 'CNY':
+      case 'CZK':
+      case 'PHP':
+      case 'LKR':
+      case 'MVR':
         return 'common'
       default:
         if (currency.code === '') return 'custom'
@@ -156,23 +166,48 @@ type CurrencyButtonProps = {
   currency: Currency
   open: boolean
   isLoading: boolean
+  compact?: boolean
 }
 const CurrencyButton = forwardRef<HTMLButtonElement, CurrencyButtonProps>(
   (
-    { currency, open, isLoading, ...props }: ButtonProps & CurrencyButtonProps,
+    {
+      currency,
+      open,
+      isLoading,
+      compact = false,
+      ...props
+    }: ButtonProps & CurrencyButtonProps,
     ref,
   ) => {
-    const iconClassName = 'ml-2 h-4 w-4 shrink-0 opacity-50'
+    const iconClassName = compact
+      ? 'ml-0.5 h-4 w-4 shrink-0 opacity-60'
+      : 'ml-2 h-4 w-4 shrink-0 opacity-50'
     return (
       <Button
-        variant="outline"
+        variant={compact ? 'ghost' : 'outline'}
         role="combobox"
         aria-expanded={open}
-        className="flex w-full justify-between"
+        className={
+          compact
+            ? 'h-auto shrink-0 gap-0 px-1 py-0 text-2xl font-black text-foreground/70 hover:bg-transparent'
+            : 'flex w-full justify-between'
+        }
         ref={ref}
         {...props}
+        // Inside an expense form this must not submit. After {...props} so a
+        // trigger cannot turn it back into a submit button.
+        type="button"
+        aria-label={
+          compact
+            ? `${currency.name} (${currency.code || currency.symbol})`
+            : props['aria-label']
+        }
       >
-        <CurrencyLabel currency={currency} />
+        {compact ? (
+          <span>{currency.code || currency.symbol}</span>
+        ) : (
+          <CurrencyLabel currency={currency} />
+        )}
         {isLoading ? (
           <Loader2 className={`animate-spin ${iconClassName}`} />
         ) : (

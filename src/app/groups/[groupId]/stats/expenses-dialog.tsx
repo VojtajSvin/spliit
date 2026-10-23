@@ -9,7 +9,11 @@ import {
 } from '@/components/ui/dialog'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Currency } from '@/lib/currency'
-import { formatCurrency, formatDateOnly } from '@/lib/utils'
+import {
+  formatCurrency,
+  formatDateOnly,
+  formatForeignAmount,
+} from '@/lib/utils'
 import { ChevronRight } from 'lucide-react'
 import { useLocale } from 'next-intl'
 import Link from 'next/link'
@@ -20,6 +24,8 @@ export type DialogExpense = {
   title: string
   amount: number
   expenseDate: Date
+  originalAmount?: number | null
+  originalCurrency?: string | null
 }
 
 type Props = {
@@ -71,29 +77,44 @@ export function ExpensesDialog({
             <p className="p-6 text-sm text-muted-foreground">{emptyText}</p>
           ) : (
             <ul className="divide-y">
-              {expenses.map((expense) => (
-                <li key={expense.id}>
-                  <Link
-                    href={`/groups/${groupId}/expenses/${expense.id}/edit`}
-                    className="flex items-center justify-between gap-2 px-6 py-3 text-sm hover:bg-accent"
-                  >
-                    <div className="min-w-0">
-                      <div className="truncate">{expense.title}</div>
-                      <div className="text-xs text-muted-foreground">
-                        {formatDateOnly(expense.expenseDate, locale, {
-                          dateStyle: 'medium',
-                        })}
+              {expenses.map((expense) => {
+                const foreign = formatForeignAmount(
+                  expense.originalAmount,
+                  expense.originalCurrency,
+                  currency.code,
+                  locale,
+                )
+                return (
+                  <li key={expense.id}>
+                    <Link
+                      href={`/groups/${groupId}/expenses/${expense.id}/edit`}
+                      className="flex items-center justify-between gap-2 px-6 py-3 text-sm hover:bg-accent"
+                    >
+                      <div className="min-w-0">
+                        <div className="truncate">{expense.title}</div>
+                        <div className="text-xs text-muted-foreground">
+                          {formatDateOnly(expense.expenseDate, locale, {
+                            dateStyle: 'medium',
+                          })}
+                        </div>
                       </div>
-                    </div>
-                    <div className="flex shrink-0 items-center gap-1">
-                      <span className="font-bold tabular-nums">
-                        {formatCurrency(currency, expense.amount, locale)}
-                      </span>
-                      <ChevronRight className="h-4 w-4 text-muted-foreground" />
-                    </div>
-                  </Link>
-                </li>
-              ))}
+                      <div className="flex shrink-0 items-center gap-1">
+                        <span className="text-right">
+                          <span className="block font-bold tabular-nums">
+                            {formatCurrency(currency, expense.amount, locale)}
+                          </span>
+                          {foreign && (
+                            <span className="block text-xs text-muted-foreground tabular-nums">
+                              {foreign}
+                            </span>
+                          )}
+                        </span>
+                        <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                      </div>
+                    </Link>
+                  </li>
+                )
+              })}
             </ul>
           )}
         </div>
