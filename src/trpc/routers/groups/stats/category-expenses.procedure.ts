@@ -28,6 +28,8 @@ export const getStatsCategoryExpensesProcedure = baseProcedure
         title: expense.title,
         amount: expense.amount,
         expenseDate: expense.expenseDate,
+        originalAmount: expense.originalAmount,
+        originalCurrency: expense.originalCurrency,
       })),
     }
   })

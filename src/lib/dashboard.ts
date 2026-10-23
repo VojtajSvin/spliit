@@ -10,6 +10,8 @@ type DashboardExpense = {
   category: { id: number; grouping: string; name: string } | null
   paidFor: { participant: { id: string; name: string }; shares: number }[]
   splitMode: string
+  originalAmount?: number | null
+  originalCurrency?: string | null
 }
 
 const dayKey = (d: Date) => d.toISOString().slice(0, 10)
@@ -96,6 +98,8 @@ export function getDashboard(
       paidByName: e.paidBy.name,
       categoryGrouping: e.category?.grouping ?? null,
       categoryName: e.category?.name ?? null,
+      originalAmount: e.originalAmount ?? null,
+      originalCurrency: e.originalCurrency ?? null,
     }))
 
   // Budget: within the set range; without any date, the current month.

@@ -1,7 +1,10 @@
 import { getCurrency } from './currency'
 import {
+  amountsForGroupCurrency,
   convertToGroupCurrency,
   convertToOriginalCurrency,
+  parseLocaleDecimal,
+  resolveConversionRate,
 } from './currency-conversion'
 
 const EUR = getCurrency('EUR')
@@ -49,6 +52,67 @@ describe('convertToOriginalCurrency', () => {
 
   it('rejects a non-numeric amount', () => {
     expect(convertToOriginalCurrency(NaN, 38.4, EUR)).toBeNull()
+  })
+})
+
+describe('amountsForGroupCurrency', () => {
+  const CZK = getCurrency('CZK', 'cs-CZ')
+  const EUR = getCurrency('EUR', 'cs-CZ')
+  const LKR = getCurrency('LKR', 'cs-CZ')
+  const MVR = getCurrency('MVR', 'cs-CZ')
+
+  it('knows the currencies the group actually spends', () => {
+    expect(CZK.code).toBe('CZK')
+    expect(EUR.symbol).toBe('€')
+    expect(LKR.code).toBe('LKR')
+    expect(MVR.name).toBe('maledivská rufiyaa')
+    expect(getCurrency('PHP', 'cs-CZ').code).toBe('PHP')
+    expect(getCurrency('CHF', 'cs-CZ').code).toBe('CHF')
+  })
+
+  it('stores a group-currency amount with no original fields', () => {
+    expect(
+      amountsForGroupCurrency({
+        enteredMajor: 120.5,
+        entered: CZK,
+        group: CZK,
+        rate: 99,
+      }),
+    ).toEqual({ amount: 12050 })
+  })
+
+  it('converts a foreign amount into group-currency minor units and keeps the rate', () => {
+    // 100 EUR * 24.329 = 2432.90 CZK
+    expect(
+      amountsForGroupCurrency({
+        enteredMajor: 100,
+        entered: EUR,
+        group: CZK,
+        rate: 24.329,
+      }),
+    ).toEqual({
+      amount: 243290,
+      originalAmount: 10000,
+      originalCurrency: 'EUR',
+      conversionRate: 24.329,
+    })
+  })
+
+  it('refuses a foreign amount until a positive rate exists', () => {
+    expect(
+      amountsForGroupCurrency({
+        enteredMajor: 50,
+        entered: LKR,
+        group: CZK,
+        rate: null,
+      }),
+    ).toBeNull()
+    expect(parseLocaleDecimal('24,50')).toBe(24.5)
+    expect(parseLocaleDecimal('1 234,5')).toBe(1234.5)
+    expect(resolveConversionRate('', undefined)).toBeNull()
+    expect(resolveConversionRate('0,15', undefined)).toBe(0.15)
+    expect(resolveConversionRate('', 24.329)).toBe(24.329)
+    expect(resolveConversionRate('25', 24.329)).toBe(25)
   })
 })
 

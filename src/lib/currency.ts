@@ -46,6 +46,9 @@ export const supportedCurrencyCodes = [
   'VND',
   'ZAR',
   'COP',
+  // Not in the ECB feed Frankfurter uses; the quick-add form asks for a rate.
+  'LKR',
+  'MVR',
 ] as const
 export type supportedCurrencyCodeType = (typeof supportedCurrencyCodes)[number]
 

@@ -89,6 +89,40 @@ export function formatCurrency(
   return formatted.replace('€', currency.symbol)
 }
 
+/**
+ * Original-currency label for an expense whose `amount` is already in the group
+ * currency. Missing for expenses entered in the group currency, including every
+ * expense saved before per-expense currencies.
+ */
+export function formatForeignAmount(
+  originalAmount: number | null | undefined,
+  originalCurrency: string | null | undefined,
+  groupCurrencyCode: string,
+  locale: string,
+): string | null {
+  if (
+    originalAmount == null ||
+    !originalCurrency ||
+    originalCurrency === groupCurrencyCode
+  ) {
+    return null
+  }
+  const known = getCurrency(
+    originalCurrency,
+    locale as Parameters<typeof getCurrency>[1],
+  )
+  const currency = known.code
+    ? known
+    : {
+        ...known,
+        code: originalCurrency,
+        symbol: originalCurrency,
+        symbol_native: originalCurrency,
+        name: originalCurrency,
+      }
+  return formatCurrency(currency, originalAmount, locale)
+}
+
 export function getCurrencyFromGroup(
   group: Pick<Group, 'currency' | 'currencyCode'>,
 ): Currency {

@@ -6,8 +6,13 @@ import { DocumentsCount } from '@/app/groups/[groupId]/expenses/documents-count'
 import { Button } from '@/components/ui/button'
 import { Locale } from '@/i18n/request'
 import { getGroupExpenses } from '@/lib/api'
-import { Currency, getCurrency } from '@/lib/currency'
-import { cn, formatCurrency, formatDateOnly } from '@/lib/utils'
+import { Currency } from '@/lib/currency'
+import {
+  cn,
+  formatCurrency,
+  formatDateOnly,
+  formatForeignAmount,
+} from '@/lib/utils'
 import { ChevronRight } from 'lucide-react'
 import { useLocale, useTranslations } from 'next-intl'
 import Link from 'next/link'
@@ -62,16 +67,12 @@ export function ExpenseCard({
   const router = useRouter()
   const locale = useLocale() as Locale
 
-  const originalAmount =
-    expense.originalAmount != null &&
-    expense.originalCurrency &&
-    expense.originalCurrency !== currency.code
-      ? formatCurrency(
-          getCurrency(expense.originalCurrency, locale),
-          expense.originalAmount,
-          locale,
-        )
-      : null
+  const originalAmount = formatForeignAmount(
+    expense.originalAmount,
+    expense.originalCurrency,
+    currency.code,
+    locale,
+  )
 
   return (
     <div

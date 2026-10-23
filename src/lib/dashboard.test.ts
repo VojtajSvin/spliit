@@ -47,7 +47,24 @@ describe('getDashboard', () => {
     expect(d.months[5]).toEqual({ month: '2026-10', amount: 1000 })
     expect(d.byPayer.map((p) => p.amount)).toEqual([1000, 3000])
     expect(d.recent[0].id).toBe('3')
+    expect(d.recent[0].originalAmount).toBeNull()
     expect(d.reimbursements).toHaveLength(1)
+  })
+
+  it('keeps totals in the stored group amount and passes the original through', () => {
+    const foreign = {
+      ...exp('9', '2026-10-03', 243290),
+      originalAmount: 10000,
+      originalCurrency: 'EUR',
+    }
+    const d = getDashboard([foreign], [a, b], now)
+    expect(d.total).toBe(243290)
+    expect(d.thisMonth).toBe(243290)
+    expect(d.recent[0]).toMatchObject({
+      amount: 243290,
+      originalAmount: 10000,
+      originalCurrency: 'EUR',
+    })
   })
 
   it('computes a monthly budget and a ranged budget', () => {
