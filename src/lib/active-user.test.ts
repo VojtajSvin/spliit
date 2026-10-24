@@ -2,6 +2,7 @@ import {
   ACTIVE_USER_NONE,
   chosenParticipantId,
   claimPendingActiveUser,
+  participantStatus,
   settlementForParticipant,
 } from './active-user'
 
@@ -51,6 +52,51 @@ describe('settlementForParticipant', () => {
   it('is empty when this person is already settled', () => {
     expect(settlementForParticipant(rows, 'nobody')).toBeNull()
     expect(settlementForParticipant([], 'owner')).toBeNull()
+  })
+})
+
+describe('participantStatus', () => {
+  it('lists each creditor, largest first, and stops at three lines', () => {
+    const rows = [
+      { from: 'me', to: 'a', amount: 10 },
+      { from: 'me', to: 'b', amount: 40 },
+      { from: 'me', to: 'c', amount: 30 },
+      { from: 'me', to: 'd', amount: 20 },
+      { from: 'x', to: 'me', amount: 999 },
+    ]
+
+    expect(participantStatus(rows, 'me')).toEqual({
+      kind: 'owe',
+      lines: [
+        { from: 'me', to: 'b', amount: 40 },
+        { from: 'me', to: 'c', amount: 30 },
+        { from: '', to: '', amount: 30, others: 2 },
+      ],
+    })
+  })
+
+  it('lists people who owe this participant when they owe nobody', () => {
+    expect(
+      participantStatus(
+        [
+          { from: 'a', to: 'me', amount: 15 },
+          { from: 'b', to: 'me', amount: 5 },
+        ],
+        'me',
+      ),
+    ).toEqual({
+      kind: 'owed',
+      lines: [
+        { from: 'a', to: 'me', amount: 15 },
+        { from: 'b', to: 'me', amount: 5 },
+      ],
+    })
+  })
+
+  it('is settled when no reimbursement involves them', () => {
+    expect(
+      participantStatus([{ from: 'a', to: 'b', amount: 10 }], 'me'),
+    ).toEqual({ kind: 'settled' })
   })
 })
 

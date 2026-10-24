@@ -5,7 +5,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import {
   chosenParticipantId,
   openActiveUserPicker,
-  settlementForParticipant,
+  participantStatus,
 } from '@/lib/active-user'
 import { TrackPage } from '@/lib/analytics/track-page'
 import { useActiveUserState } from '@/lib/hooks'
@@ -84,9 +84,12 @@ export function GroupDashboard() {
         group.participants.map((p) => p.id),
       )
     : null
-  // Only a settlement that involves the person on this device. The group's
-  // first suggestion is someone else's debt (often whoever created the group).
-  const debt = me ? settlementForParticipant(data.reimbursements, me) : null
+  // Only settlements that involve the person on this device.
+  const status = me ? participantStatus(data.reimbursements, me) : null
+  const primary =
+    status && status.kind !== 'settled'
+      ? status.lines.find((line) => !line.others)
+      : undefined
   const label = (id: string, fallback: string) =>
     id === me ? t('you') : fallback
   const fmtDay = (d: string | null) =>
@@ -133,11 +136,17 @@ export function GroupDashboard() {
       {/* Hero — from the participant chosen on this device */}
       <section className="clay bg-peach relative overflow-hidden p-5 pr-24">
         <div className="absolute -right-2 bottom-0 text-[84px] leading-none select-none drop-shadow-md">
-          {!ready ? '👋' : !me ? '🙋' : debt ? '🪴' : '🎉'}
+          {!ready
+            ? '👋'
+            : !me
+              ? '🙋'
+              : status?.kind === 'settled'
+                ? '🎉'
+                : '🪴'}
         </div>
         {!ready ? (
           <Skeleton className="h-24 w-3/4" />
-        ) : !me ? (
+        ) : !me || !status ? (
           <>
             <p className="font-extrabold text-lg">{t('pickYou')}</p>
             <p className="mt-2 text-sm font-semibold text-foreground/70">
@@ -152,33 +161,44 @@ export function GroupDashboard() {
               {t('pickYouButton')}
             </Button>
           </>
-        ) : debt ? (
-          <>
-            <p className="font-extrabold text-lg">{t('hello')}</p>
-            <p className="mt-2 text-sm font-semibold text-foreground/70">
-              {debt.from === me
-                ? t('youOwe', { to: name(debt.to) })
-                : t('owesYou', { from: name(debt.from) })}
-            </p>
-            <p
-              className="text-3xl font-black tracking-tight mt-1"
-              data-testid="dashboard-debt"
-            >
-              {money(debt.amount)}
-            </p>
-            <Button asChild className="mt-4" size="lg">
-              <Link
-                href={`/groups/${groupId}/expenses/create?reimbursement=yes&from=${debt.from}&to=${debt.to}&amount=${debt.amount}`}
-              >
-                🤝 {t('settle')}
-              </Link>
-            </Button>
-          </>
+        ) : status.kind === 'settled' ? (
+          <p
+            className="text-2xl font-black leading-tight"
+            data-testid="dashboard-debt"
+          >
+            {t('youSettledNow')}
+          </p>
         ) : (
           <>
-            <p className="font-extrabold text-lg">{t('hello')}</p>
-            <p className="text-2xl font-black mt-2">{t('youSettled')}</p>
-            <p className="text-sm text-foreground/70">{t('youSettledText')}</p>
+            <ul className="flex flex-col gap-1" data-testid="dashboard-debt">
+              {status.lines.map((line, index) => (
+                <li key={index} className="text-lg font-black leading-snug">
+                  {line.others
+                    ? t(status.kind === 'owe' ? 'youOweMore' : 'owedMore', {
+                        count: line.others,
+                        amount: money(line.amount),
+                      })
+                    : status.kind === 'owe'
+                      ? t('youOweNow', {
+                          name: name(line.to),
+                          amount: money(line.amount),
+                        })
+                      : t('owesYouNow', {
+                          name: name(line.from),
+                          amount: money(line.amount),
+                        })}
+                </li>
+              ))}
+            </ul>
+            {primary && (
+              <Button asChild className="mt-4" size="lg">
+                <Link
+                  href={`/groups/${groupId}/expenses/create?reimbursement=yes&from=${primary.from}&to=${primary.to}&amount=${primary.amount}`}
+                >
+                  🤝 {t('settle')}
+                </Link>
+              </Button>
+            )}
           </>
         )}
       </section>

@@ -41,17 +41,66 @@ export function chosenParticipantId(
 export function settlementForParticipant<
   T extends { from: string; to: string; amount: number },
 >(reimbursements: readonly T[], participantId: string): T | null {
-  const mine = reimbursements.filter(
-    (reimbursement) =>
-      reimbursement.from === participantId ||
-      reimbursement.to === participantId,
-  )
-  const owedByMe = mine.filter(
-    (reimbursement) => reimbursement.from === participantId,
-  )
-  const pool = owedByMe.length > 0 ? owedByMe : mine
-  if (pool.length === 0) return null
-  return pool.reduce((best, item) => (item.amount > best.amount ? item : best))
+  const status = participantStatus(reimbursements, participantId)
+  if (status.kind === 'settled') return null
+  const line = status.lines.find((item) => !item.others)
+  return (line as T | undefined) ?? null
+}
+
+export type ParticipantBalanceLine = {
+  from: string
+  to: string
+  amount: number
+  /** Set when this line sums everyone who did not fit on their own line. */
+  others?: number
+}
+
+export type ParticipantStatus =
+  | { kind: 'settled' }
+  | { kind: 'owe' | 'owed'; lines: ParticipantBalanceLine[] }
+
+const STATUS_LINE_LIMIT = 3
+
+/**
+ * What the active participant should read on the dashboard.
+ * Debts they still have to pay come first. At most three lines: each
+ * counterparty, or the two largest plus a total for the rest.
+ */
+export function participantStatus(
+  reimbursements: readonly { from: string; to: string; amount: number }[],
+  participantId: string,
+): ParticipantStatus {
+  const owe = reimbursements
+    .filter((reimbursement) => reimbursement.from === participantId)
+    .sort((a, b) => b.amount - a.amount || a.to.localeCompare(b.to))
+  const owed = reimbursements
+    .filter((reimbursement) => reimbursement.to === participantId)
+    .sort((a, b) => b.amount - a.amount || a.from.localeCompare(b.from))
+  const pool = owe.length > 0 ? owe : owed
+  if (pool.length === 0) return { kind: 'settled' }
+  return {
+    kind: owe.length > 0 ? 'owe' : 'owed',
+    lines: capStatusLines(pool),
+  }
+}
+
+function capStatusLines(
+  rows: readonly { from: string; to: string; amount: number }[],
+): ParticipantBalanceLine[] {
+  if (rows.length <= STATUS_LINE_LIMIT) {
+    return rows.map((row) => ({ ...row }))
+  }
+  const shown = rows.slice(0, STATUS_LINE_LIMIT - 1)
+  const rest = rows.slice(STATUS_LINE_LIMIT - 1)
+  return [
+    ...shown.map((row) => ({ ...row })),
+    {
+      from: '',
+      to: '',
+      amount: rest.reduce((sum, row) => sum + row.amount, 0),
+      others: rest.length,
+    },
+  ]
 }
 
 export function persistActiveUser(groupId: string, value: string) {
