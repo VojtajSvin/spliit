@@ -23,7 +23,6 @@ export function ReimbursementList({
 }: Props) {
   const locale = useLocale()
   const t = useTranslations('Balances.Reimbursements')
-  const you = useTranslations('Balances')
   const activeId = chosenParticipantId(
     useActiveUser(groupId),
     participants.map((p) => p.id),
@@ -33,8 +32,7 @@ export function ReimbursementList({
   }
 
   const getParticipant = (id: string) => participants.find((p) => p.id === id)
-  const label = (id: string) =>
-    id === activeId ? you('you') : (getParticipant(id)?.name ?? '')
+  const label = (id: string) => getParticipant(id)?.name ?? ''
   return (
     <div className="text-sm">
       {reimbursements.map((reimbursement, index) => (

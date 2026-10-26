@@ -90,8 +90,7 @@ export function GroupDashboard() {
     status && status.kind !== 'settled'
       ? status.lines.find((line) => !line.others)
       : undefined
-  const label = (id: string, fallback: string) =>
-    id === me ? t('you') : fallback
+  const meName = me ? name(me) : ''
   const fmtDay = (d: string | null) =>
     d
       ? new Intl.DateTimeFormat(locale, {
@@ -166,7 +165,7 @@ export function GroupDashboard() {
             className="text-2xl font-black leading-tight"
             data-testid="dashboard-debt"
           >
-            {t('youSettledNow')}
+            {t('youSettledNow', { name: meName })}
           </p>
         ) : (
           <>
@@ -175,18 +174,15 @@ export function GroupDashboard() {
                 <li key={index} className="text-lg font-black leading-snug">
                   {line.others
                     ? t(status.kind === 'owe' ? 'youOweMore' : 'owedMore', {
+                        name: meName,
                         count: line.others,
                         amount: money(line.amount),
                       })
-                    : status.kind === 'owe'
-                      ? t('youOweNow', {
-                          name: name(line.to),
-                          amount: money(line.amount),
-                        })
-                      : t('owesYouNow', {
-                          name: name(line.from),
-                          amount: money(line.amount),
-                        })}
+                    : t('owesNow', {
+                        from: name(line.from),
+                        to: name(line.to),
+                        amount: money(line.amount),
+                      })}
                 </li>
               ))}
             </ul>
@@ -396,16 +392,20 @@ export function GroupDashboard() {
           </svg>
           <ul className="flex-1 flex flex-col gap-2 text-sm">
             {data.byPayer.map((p, i) => (
-              <li key={p.participantId} className="flex items-center gap-2">
+              <li
+                key={p.participantId}
+                className={cn(
+                  'flex items-center gap-2 rounded-lg',
+                  p.participantId === me && 'bg-primary/15 px-2 font-extrabold',
+                )}
+              >
                 <span
                   className="w-3 h-3 rounded-full shrink-0"
                   style={{
                     backgroundColor: DONUT_COLORS[i % DONUT_COLORS.length],
                   }}
                 />
-                <span className="flex-1 font-semibold truncate">
-                  {label(p.participantId, p.name)}
-                </span>
+                <span className="flex-1 font-semibold truncate">{p.name}</span>
                 <span className="font-bold">
                   {Math.round((p.amount / payerTotal) * 100)} %
                 </span>

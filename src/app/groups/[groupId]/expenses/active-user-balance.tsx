@@ -35,9 +35,16 @@ export function ActiveUserBalance({ groupId, currency, expense }: Props) {
         </>
       )
     }
+    const activeName =
+      expense.paidBy.id === activeUserId
+        ? expense.paidBy.name
+        : expense.paidFor.find((part) => part.participant.id === activeUserId)
+            ?.participant.name
     fmtBalance = (
       <>
-        {t('yourBalance')}{' '}
+        {activeName
+          ? t('namedBalance', { name: activeName })
+          : t('yourBalance')}{' '}
         <Money {...{ currency, amount: balance.total }} bold colored />
         {balanceDetail}
       </>

@@ -128,7 +128,7 @@ describe('QuickAddForm currency', () => {
   it('defaults the payer to the active participant, not the first one', async () => {
     localStorage.setItem('g1-activeUser', 'b')
     await shown()
-    expect(screen.getByTestId('quick-payer')).toHaveTextContent('Ty')
+    expect(screen.getByTestId('quick-payer')).toHaveTextContent('Petr')
     fireEvent.change(screen.getByTestId('quick-amount'), {
       target: { value: '10' },
     })

@@ -120,10 +120,7 @@ export function QuickAddForm({ groupId }: { groupId: string }) {
   const me = chosenParticipantId(activeUser, participantIds)
   const name = (id?: string) =>
     group.participants.find((p) => p.id === id)?.name ?? ''
-  const labelOf = (id?: string) => {
-    if (!id) return t('pickYou')
-    return id === me ? t('you') : name(id)
-  }
+  const labelOf = (id?: string) => (id ? name(id) : t('pickYou'))
   const valid = money != null && !!paidBy && paidFor.length > 0
   const showRateInput =
     converting &&
