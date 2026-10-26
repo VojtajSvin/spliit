@@ -71,6 +71,9 @@ export function TotalsPageClient() {
             totalParticipantSpendings={data?.totalParticipantSpendings}
             totalParticipantShare={data?.totalParticipantShare}
             currency={currency}
+            participantName={
+              group?.participants.find((p) => p.id === participantId)?.name
+            }
           />
         </CardContent>
       </Card>

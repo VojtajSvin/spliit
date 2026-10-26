@@ -11,6 +11,7 @@ type Props = {
   totalParticipantSpendings?: number
   totalParticipantShare?: number
   currency?: Currency
+  participantName?: string
 }
 
 export function Totals({
@@ -18,6 +19,7 @@ export function Totals({
   totalParticipantSpendings,
   totalParticipantShare,
   currency,
+  participantName,
 }: Props) {
   if (totalGroupSpendings === undefined || !currency)
     return (
@@ -43,10 +45,12 @@ export function Totals({
             <TotalsYourSpendings
               totalParticipantSpendings={totalParticipantSpendings}
               currency={currency}
+              participantName={participantName}
             />
             <TotalsYourShare
               totalParticipantShare={totalParticipantShare}
               currency={currency}
+              participantName={participantName}
             />
           </>
         )}

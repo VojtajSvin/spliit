@@ -4,7 +4,7 @@ import { Balances } from '@/lib/balances'
 import { Currency } from '@/lib/currency'
 import { useActiveUser } from '@/lib/hooks'
 import { cn, formatCurrency } from '@/lib/utils'
-import { useLocale, useTranslations } from 'next-intl'
+import { useLocale } from 'next-intl'
 
 type Props = {
   balances: Balances
@@ -20,7 +20,6 @@ export function BalancesList({
   groupId,
 }: Props) {
   const locale = useLocale()
-  const t = useTranslations('Balances')
   const activeId = chosenParticipantId(
     useActiveUser(groupId),
     participants.map((p) => p.id),
@@ -48,7 +47,7 @@ export function BalancesList({
             )}
           >
             <div className={cn('w-1/2 p-2', isLeft && 'text-right')}>
-              {isYou ? t('you') : participant.name}
+              {participant.name}
             </div>
             <div className={cn('w-1/2 relative', isLeft || 'text-right')}>
               <div className="absolute inset-0 p-2 z-20">

@@ -21,6 +21,7 @@ import { useEffect, useState } from 'react'
 type CurrencyBalance = {
   currency: Currency
   amount: number
+  names: string[]
 }
 
 export function GlobalBalanceCard({ groups }: { groups: RecentGroups }) {
@@ -99,18 +100,31 @@ function GlobalBalanceCard_({
     const existing = byCurrency.get(key)
     if (existing) {
       existing.amount += balance.amount
+      if (!existing.names.includes(balance.participantName)) {
+        existing.names.push(balance.participantName)
+      }
     } else {
-      byCurrency.set(key, { currency, amount: balance.amount })
+      byCurrency.set(key, {
+        currency,
+        amount: balance.amount,
+        names: [balance.participantName],
+      })
     }
   }
 
   const currencyBalances = [...byCurrency.values()]
   const isSettledUp = currencyBalances.every(({ amount }) => amount === 0)
+  const everyone = [
+    ...new Set(data.balances.map((balance) => balance.participantName)),
+  ]
+  const onlyName = everyone.length === 1 ? everyone[0] : undefined
 
   return (
     <Card className="mb-4">
       <CardHeader>
-        <CardTitle>{t('title')}</CardTitle>
+        <CardTitle>
+          {onlyName ? t('titleNamed', { name: onlyName }) : t('title')}
+        </CardTitle>
         <CardDescription>{t('description')}</CardDescription>
       </CardHeader>
       <CardContent>
@@ -118,20 +132,23 @@ function GlobalBalanceCard_({
           <p className="text-muted-foreground text-sm">{t('settledUp')}</p>
         ) : (
           <ul className="flex flex-col gap-1">
-            {currencyBalances.map(({ currency, amount }) => {
+            {currencyBalances.map(({ currency, amount, names }) => {
               if (amount === 0) return null
               const formatted = formatCurrency(
                 currency,
                 Math.abs(amount),
                 locale,
               )
+              const who = names.length === 1 ? names[0] : undefined
               return (
                 <li
                   key={currency.code || currency.symbol}
                   className="flex justify-between items-baseline gap-2 text-sm"
                 >
                   <span className="text-muted-foreground">
-                    {amount > 0 ? t('owedToYou') : t('youOwe')}
+                    {who
+                      ? t(amount > 0 ? 'owedNamed' : 'owesNamed', { name: who })
+                      : t(amount > 0 ? 'owed' : 'owes')}
                   </span>
                   <span
                     className={cn(

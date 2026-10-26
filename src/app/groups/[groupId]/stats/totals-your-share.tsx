@@ -7,16 +7,22 @@ import { useLocale, useTranslations } from 'next-intl'
 export function TotalsYourShare({
   totalParticipantShare = 0,
   currency,
+  participantName,
 }: {
   totalParticipantShare?: number
   currency: Currency
+  participantName?: string
 }) {
   const locale = useLocale()
   const t = useTranslations('Stats.Totals')
 
   return (
     <div>
-      <div className="text-muted-foreground">{t('yourShare')}</div>
+      <div className="text-muted-foreground">
+        {participantName
+          ? t('namedShare', { name: participantName })
+          : t('yourShare')}
+      </div>
       <div
         className={cn(
           'text-lg',

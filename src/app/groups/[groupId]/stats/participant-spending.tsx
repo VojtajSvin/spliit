@@ -72,7 +72,6 @@ function ParticipantTable({
 }) {
   const locale = useLocale()
   const t = useTranslations('Stats.ByParticipant')
-  const you = useTranslations('Stats')
 
   return (
     <Table>
@@ -94,7 +93,7 @@ function ParticipantTable({
               className={cn(isYou && 'bg-primary/15 font-extrabold')}
             >
               <TableCell className="p-2 font-medium">
-                {isYou ? you('you') : participant.name}
+                {participant.name}
               </TableCell>
               <TableCell className="p-2 text-right tabular-nums">
                 {formatCurrency(currency, participant.paid, locale)}

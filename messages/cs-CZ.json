@@ -46,6 +46,7 @@
     "paidBy": "Zaplatil/a <strong>{paidBy}</strong> za <paidFor></paidFor>",
     "receivedBy": "Obdržel/a <strong>{paidBy}</strong> od <paidFor></paidFor>",
     "yourBalance": "Váš zůstatek:",
+    "namedBalance": "{name}:",
     "everyone": "všichni",
     "notInvolved": "Neúčastníte se"
   },
@@ -92,10 +93,15 @@
     },
     "createGroup": "Vytvořit skupinu",
     "GlobalBalance": {
-      "title": "Váš celkový zůstatek",
-      "description": "Váš celkový zůstatek ve všech vašich skupinách.",
+      "title": "Celkový zůstatek",
+      "description": "Součet zůstatků ve skupinách, kde je na tomhle zařízení vybraný účastník.",
+      "titleNamed": "Celkový zůstatek: {name}",
       "owedToYou": "Dluží se ti",
       "youOwe": "Dlužíš",
+      "owesNamed": "{name} dluží",
+      "owedNamed": "dluží {name}",
+      "owes": "K zaplacení",
+      "owed": "K přijetí",
       "settledUp": "Ve všech skupinách máte vše vyrovnané.",
       "loadError": "Celkový zůstatek se nepodařilo načíst. Zkuste to znovu.",
       "retry": "Zkusit znovu"
@@ -349,7 +355,10 @@
       "groupEarnings": "Celkové příjmy skupiny",
       "yourSpendings": "Vaše celkové výdaje",
       "yourEarnings": "Vaše celkové příjmy",
-      "yourShare": "Váš celkový podíl"
+      "yourShare": "Váš celkový podíl",
+      "namedSpendings": "{name}: celkové výdaje",
+      "namedEarnings": "{name}: celkové příjmy",
+      "namedShare": "{name}: celkový podíl"
     },
     "range": {
       "label": "Období",
@@ -611,9 +620,10 @@
     "owesYou": "{from} ti dluží",
     "youOweNow": "Momentálně dlužíš {name} {amount}",
     "owesYouNow": "{name} ti dluží {amount}",
-    "youOweMore": "a dalším {count} celkem {amount}",
-    "owedMore": "další {count} ti dluží celkem {amount}",
-    "youSettledNow": "Momentálně jsi vyrovnaný ✅",
+    "owesNow": "{from} dluží {to} {amount}",
+    "youOweMore": "{name} dluží další {count} celkem {amount}",
+    "owedMore": "další {count} dluží {name} celkem {amount}",
+    "youSettledNow": "Momentálně je {name} vyrovnaný ✅",
     "youSettled": "S nikým nic nemáš 🎉",
     "youSettledText": "Tvoje účty v téhle skupině jsou vyrovnané.",
     "pickYou": "Kdo jsi?",
